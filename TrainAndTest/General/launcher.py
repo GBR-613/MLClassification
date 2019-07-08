@@ -7,7 +7,7 @@ from WordEmbedding.vectors import Embedding
 from Data.data import DataLoader
 from Models.controller import ModelController
 from Models.consolidation import Collector
-from Utils.utils import defaultOptions, fullPath
+from Utils.utils import get_configuration, get_absolute_path
 from Info.creator import InfoCreator
 
 Config = {}
@@ -15,31 +15,31 @@ Config = {}
 def parseConfig(path):
     parser = ConfigParser()
     parser.read_file(open(path))
-    try:
-        sections = parser.sections()
-        for i in range(len(sections)):
-            options = parser.items(sections[i])
-            if sections[i] == "requests":
-                if len(options) == 0 or not parser.has_option("requests", "request"):
-                    print ("Config file doesn't contain request for any process. Exit.")
-                    return
-            for j in range(len(options)):
-                Config[options[j][0]] = options[j][1]
-        if not Config["home"]:
-            Config["home"] = str(Path.home())
-        Config["reqid"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-        Config["modelid"] = 0
-        Config["results"] = {}
-        Config["metrics"] = {}
-        Config["resources"] = {}
-        Config["resources"]["reqid"] = Config["reqid"]
-        Config["resources"]["models"] = {}
-        Config["resources"]["w2v"] = {}
-        Config["error"] = False
-        parseRequestAndLaunchPipe(parser, Config["request"])
-    except Error:
-        print ("Config file's parsing error. Exit.")
-        return
+    #try:
+    sections = parser.sections()
+    for i in range(len(sections)):
+        options = parser.items(sections[i])
+        if sections[i] == "requests":
+            if len(options) == 0 or not parser.has_option("requests", "request"):
+                print ("Config file doesn't contain request for any process. Exit.")
+                return
+        for j in range(len(options)):
+            Config[options[j][0]] = options[j][1]
+    if not Config["home"]:
+        Config["home"] = str(Path.home())
+    Config["reqid"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    Config["modelid"] = 0
+    Config["results"] = {}
+    Config["metrics"] = {}
+    Config["ranks"] = {}
+    Config["resources"] = {}
+    Config["resources"]["reqid"] = Config["reqid"]
+    Config["resources"]["models"] = {}
+    Config["resources"]["w2v"] = {}
+    #Config["error"] = False
+    parseRequestAndLaunchPipe(parser, Config["request"])
+    #except Error:
+    #    raise Exception("Config file's parsing error. Exit.")
 
 
 def parseRequestAndLaunchPipe(parser, req):
@@ -69,54 +69,54 @@ def parseRequestAndLaunchPipe(parser, req):
                 for k in range(len(kvs)):
                     kwargs[kvs[0].lower()] = kvs[1]
         if process == "P":   #Preprocess
-            DefConfig = defaultOptions(parser, "preprocess")
+            DefConfig = get_configuration(parser, "preprocess")
             Preprocessor(Config, DefConfig, kwargs)
         elif process == "W":  #Word Embedding
-            DefConfig = defaultOptions(parser, "word_embedding")
+            DefConfig = get_configuration(parser, "word_embedding")
             Embedding(Config, DefConfig, kwargs)
         elif process == "D":  #Load data
-            DefConfig = defaultOptions(parser, "data")
+            DefConfig = get_configuration(parser, "data")
             DataLoader(Config, DefConfig, kwargs)
         elif process == "C": #Collector
             Collector(Config)
         else:    #Model
-            DefConfig = defaultOptions(parser, "model")
+            DefConfig = get_configuration(parser, "model")
             ModelController(Config, DefConfig, kwargs)
-        if Config["error"]:
-            return
+#        if Config["error"]:
+#            return
 
 def parseConfigInfo(path):
     parser = ConfigParser()
     parser.read_file(open(path))
-    try:
-        sections = parser.sections()
-        for i in range(len(sections)):
-            options = parser.items(sections[i])
-            for j in range(len(options)):
-                Config[options[j][0]] = options[j][1]
-        if not Config["home"]:
-            Config["home"] = str(Path.home())
-        if not Config["infofrom"]:
-            Config["infofrom"] = "today"
-        if Config["infofrom"] != "today":
-            chk = Config["infofrom"].split()
-            if len(chk) != 2 and not chk[1].startswith("day"):
-                print ("Wrong value of 'infofrom' option. Exit.")
-                return
-            try:
-                days = int(chk[0])
-            except ValueError:
-                print ("Wrong value of 'infofrom' option. Exit.")
-                return
-        if len(Config["reportspath"]) == 0 or not os.path.isdir(fullPath(Config, "reportspath")):
-            print("Wrong path to the folder, containing reports. Exit.")
+    #try:
+    sections = parser.sections()
+    for i in range(len(sections)):
+        options = parser.items(sections[i])
+        for j in range(len(options)):
+            Config[options[j][0]] = options[j][1]
+    if not Config["home"]:
+        Config["home"] = str(Path.home())
+    if not Config["infofrom"]:
+        Config["infofrom"] = "today"
+    if Config["infofrom"] != "today":
+        chk = Config["infofrom"].split()
+        if len(chk) != 2 and not chk[1].startswith("day"):
+            print ("Wrong value of 'infofrom' option. Exit.")
             return
-        if len(Config["actualpath"]) == 0 or not os.path.isdir(fullPath(Config, "actualpath")):
-            print("Warning: wrong path to the folder, containing original documents.")
-            print("It will not be possible to view this documents.")
-    except Error:
-        print ("Config file's parsing error. Exit.")
+        try:
+            days = int(chk[0])
+        except ValueError:
+            print ("Wrong value of 'infofrom' option. Exit.")
+            return
+    if len(Config["reports_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "reports_path")):
+        print("Wrong path to the folder, containing reports. Exit.")
         return
+    if len(Config["actualpath"]) == 0 or not os.path.isdir(get_absolute_path(Config, "actualpath")):
+        print("Warning: wrong path to the folder, containing original documents.")
+        print("It will not be possible to view this documents.")
+    #except Error:
+    #    print ("Config file's parsing error. Exit.")
+    #    return
     InfoCreator(Config)
 
 

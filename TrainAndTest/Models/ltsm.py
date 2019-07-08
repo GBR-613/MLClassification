@@ -10,45 +10,44 @@ from keras.callbacks import ModelCheckpoint
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Models.metrics import ModelMetrics
-from Utils.utils import fullPath, showTime
+from Utils.utils import get_absolute_path, show_time
 
 class LTSMModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
-        if self.Config["w2vmodel"] == None:
-            if len(Config["w2vmodelpath"]) == 0 or not os.path.isfile(fullPath(Config, "w2vmodelpath")):
-                print ("Wrong path to W2V model. Stop.")
-                Config["error"] = True
-                return
-        if len(Config["indexerpath"]) == 0 or not os.path.isfile(fullPath(Config, "indexerpath")):
-            if Config["runfor"] == "test" or (len(Config["indexerpath"]) != 0 and not os.path.isdir(
-                    os.path.dirname(fullPath(Config, "indexerpath")))):
-                print ("Wrong path to indexer. Stop.")
-                Config["error"] = True
-                return
+        if not self.isCorrectPath(Config):
+            raise Exception
         try:
-            self.valSize = float(Config["valsize"])
+            self.validation_data_size = float(Config["validation_data_size"])
         except ValueError:
-            self.valSize = 0
-        if self.valSize <= 0 or self.valSize >= 1:
-            print ("Wrong size of validation data set. Stop.")
-            Config["error"] = True
-            return
+            self.validation_data_size = 0
+        if self.validation_data_size <= 0 or self.validation_data_size >= 1:
+            raise ValueError("Wrong size of validation data set. Stop.")
         try:
-            self.ndim = int(self.Config["w2vdim"])
+            self.ndim = int(self.Config["vectors_dimension"])
         except ValueError:
-            print ("Wrong size of vectors' dimentions. Stop.")
-            Config["error"] = True
-            return
+            raise ValueError("Wrong size of vectors' dimentions. Stop.")
         self.addValSet = True
         self.handleType = "wordVectorsMatrix"
-        self.tempSave = Config["tempsave"] == "yes"
+        self.save_intermediate_results = Config["save_intermediate_results"] == "True"
         self.useProbabilities = True
         self.w2vModel = None
-        self.loadW2VModel()
-        if Config["runfor"] != "crossvalidation":
+        self.load_w2v_model()
+        if Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
         self.launchProcess()
+
+    def isCorrectPath(self, Config):
+        if self.Config["w2vmodel"] == None:
+            if len(Config["model_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "model_path")):
+                print("Wrong path to W2V model. Stop.")
+                return False
+        if len(Config["indexer_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "indexer_path")):
+            if Config["type_of_execution"] == "test" or (len(Config["indexer_path"]) != 0 and not os.path.isdir(
+                    os.path.dirname(get_absolute_path(Config, "indexer_path")))):
+                print("Wrong path to indexer. Stop.")
+                return False
+        return True
 
     def prepareData(self):
         print ("Start data preparation...")
@@ -63,7 +62,7 @@ class LTSMModel(BaseModel):
         model.add(LSTM(self.Config["maxseqlen"]))
         model.add(Dropout(0.2))
         model.add(Dense(256, activation='relu'))
-        model.add(Dense(len(self.Config["cats"]), activation='sigmoid'))
+        model.add(Dense(len(self.Config["predefined_categories"]), activation='sigmoid'))
         model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
         return model
 
@@ -77,8 +76,8 @@ class LTSMModel(BaseModel):
         self.testNNModel()
 
     def saveAdditions(self):
-        self.resources["w2v"] = "yes"
+        self.resources["w2v"] = "True"
         if not "indexer" in self.Config["resources"]:
-            self.Config["resources"]["indexer"] = fullPath(self.Config, "indexerpath")
-        self.resources["indexer"] = "yes"
+            self.Config["resources"]["indexer"] = get_absolute_path(self.Config, "indexer_path")
+        self.resources["indexer"] = "True"
         self.resources["handleType"] = "wordVectorsMatrix"

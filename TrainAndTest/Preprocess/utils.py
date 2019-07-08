@@ -12,13 +12,13 @@ def joinTokens(tArr, Config):
         stopWords = set(stopwords.words('arabic'))
     else:
         stopWords = set()
-    exPos = Config["expos"].split(",")
+    exclude_positions = Config["exclude_positions"].split(",")
     exWords = Config["extrawords"].split(",")
     for i in range(len(tArr)):
         ftok = ''
         if i > 0:
             result += ' '
-        if tags[i] in exPos or tags[i] in stopWords or tags[i] in exWords:
+        if tags[i] in exclude_positions or tags[i] in stopWords or tags[i] in exWords:
             continue
         else:
             ftok = toks[i]

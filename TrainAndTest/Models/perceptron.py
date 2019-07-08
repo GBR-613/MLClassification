@@ -4,26 +4,16 @@ from sklearn.linear_model import Perceptron
 from sklearn.externals import joblib
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
-from Utils.utils import fullPath
+from Utils.utils import get_absolute_path
 
 class PerceptronModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
-        if len(Config["binarizerpath"]) == 0 or not os.path.isfile(fullPath(Config, "binarizerpath")):
-            if Config["runfor"] == "test" or (len(Config["binarizerpath"]) != 0 and not os.path.isdir(
-                    os.path.dirname(fullPath(Config, "binarizerpath")))):
-                print ("Wrong path to binarizer. Stop.")
-                Config["error"] = True
-                return
-        if len(Config["vectorizerpath"]) == 0 or not os.path.isfile(fullPath(Config, "vectorizerpath")):
-            if Config["runfor"] == "test" or (len(Config["vectorizerpath"]) != 0 and not os.path.isdir(
-                    os.path.dirname(fullPath(Config, "vectorizerpath")))):
-                print ("Wrong path to vectorizer. Stop.")
-                Config["error"] = True
-                return
+        if not self.isCorrectPath(Config):
+            raise Exception
         self.useProbabilities = False
         self.handleType = "vectorize"
-        if Config["runfor"] != "crossvalidation":
+        if Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
         self.launchProcess()
 
@@ -42,12 +32,12 @@ class PerceptronModel(BaseModel):
         self.trainSKLModel()
 
     def testModel(self):
-        #self.model = joblib.load(fullPath(self.Config, "modelpath", opt="name"))
+        #self.model = joblib.load(get_absolute_path(self.Config, "created_model_path", opt="name"))
         self.testSKLModel()
 
     def saveAdditions(self):
         if not "vectorizer" in self.Config["resources"]:
-            self.Config["resources"]["vectorizer"] = fullPath(self.Config, "vectorizerpath")
-        self.resources["vectorizer"] = "yes"
+            self.Config["resources"]["vectorizer"] = get_absolute_path(self.Config, "vectorizer_path")
+        self.resources["vectorizer"] = "True"
 
 

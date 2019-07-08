@@ -1,5 +1,5 @@
 import os
-from Utils.utils import fullPath, updateParams
+from Utils.utils import get_absolute_path, updateParams
 from Models.snn import SnnModel
 from Models.ltsm import LTSMModel
 from Models.cnn import CNNModel
@@ -25,91 +25,81 @@ class ModelController:
         print ("=== Model " + str(Config["modelid"]) + " ===")
         updateParams(Config, DefConfig, kwargs)
         Config["type"] = Config["type"].lower()
-        Config["runfor"] = Config["runfor"].lower()
-        if Config["runfor"] != "none" and Config["type"] not in modelTypes:
-            print("Request contains definition of model with wrong type. Stop.")
-            Config["error"] = True
-            return
-        if Config["runfor"] not in modelGoals:
-            print("Request doesn't define the goal of the model process")
-            print("It should be one of 'trainAndTest', 'train', 'test', 'crossValidation' or 'none'. Stop.")
-            Config["error"] = True
-            return
-        if Config["runfor"] != "none":
-            print ("Model type: " + Config["type"].upper() + ", " + userInfo[Config["runfor"]])
+        Config["type_of_execution"] = Config["type_of_execution"].lower()
+        if Config["type_of_execution"] != "none" and Config["type"] not in modelTypes:
+            raise ValueError("Request contains definition of model with wrong type. Stop.")
+        if Config["type_of_execution"] not in modelGoals:
+            raise ValueError("Request doesn't define the goal of the model process. "
+                             "It should be one of 'trainAndTest', 'train', 'test', 'crossValidation' or 'none'. Stop.")
+        if Config["type_of_execution"] != "none":
+            print ("Model type: " + Config["type"].upper() + ", " + userInfo[Config["type_of_execution"]])
         else:
-            print("Model : " +  userInfo[Config["runfor"]])
-        if Config["runfor"] == "none":
+            print("Model : " +  userInfo[Config["type_of_execution"]])
+        if Config["type_of_execution"] == "none":
             return
         self.Config = Config
-        self.DefConfig = DefConfig;
-        if "cats" not in Config or "traindocs" not in Config or "testdocs" not in Config:
-            print ("Input data isn't loaded. Stop.")
-            Config["error"] = True
-            return
-        stop = False
+        self.DefConfig = DefConfig
+        if "predefined_categories" not in Config or "train_docs" not in Config or "test_docs" not in Config:
+            raise ValueError("Input data isn't loaded. Stop.")
+
         try:
-            self.testSize = float(Config["testsize"])
+            self.test_data_size = float(Config["test_data_size"])
         except ValueError:
-            self.testSize = -1
-        if len(Config["trainpath"]) == 0 or not os.path.isdir(fullPath(Config, "trainpath")):
-            if Config["runfor"] != "test" or len(Config["testpath"]) == 0:
-                print ("Wrong path to the training set: folder %s doesn't exist."%(fullPath(Config, "trainpath")))
-                stop = True
-        if len(Config["testpath"]) == 0 or not os.path.isdir(fullPath(Config, "testpath")):
-            if not (len(Config["testpath"]) == 0 and self.testSize > 0 and self.testSize < 1):
-                print ("Wrong path to the testing set: folder %d doesn't exist."%(fullPath(Config, "testpath")))
-                stop = True
-        if len(Config["modelpath"]) == 0 or not os.path.isdir(fullPath(Config, "modelpath")):
-            print ("Wrong path to the models' folder.")
-            stop = True
+            self.test_data_size = -1
+        if len(Config["train_data_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "train_data_path")):
+            if Config["type_of_execution"] != "test" or len(Config["test_data_path"]) == 0:
+                raise ValueError("Wrong path to the training set: folder %s doesn't exist."%(get_absolute_path(Config, "train_data_path")))
+        if len(Config["test_data_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "test_data_path")):
+            if not (len(Config["test_data_path"]) == 0 and self.test_data_size > 0 and self.test_data_size < 1):
+                raise ValueError("Wrong path to the testing set: folder %d doesn't exist."%(get_absolute_path(Config, "test_data_path")))
+        if len(Config["created_model_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "created_model_path")):
+            raise ValueError("Wrong path to the models' folder.")
         if len(Config["name"]) == 0:
             Config["name"] = Config["type"] + str(Config["modelid"])
-        mPath = fullPath(Config, "modelpath", opt="name")
-        if Config["runfor"] == "test" and not os.path.isfile(mPath):
-            print ("Wrong path to the tested model.")
-            stop = True
-        if Config["runfor"] != "test":
+        mPath = get_absolute_path(Config, "created_model_path", opt="name")
+        if Config["type_of_execution"] == "test" and not os.path.isfile(mPath):
+            raise ValueError("Wrong path to the tested model.")
+        if Config["type_of_execution"] != "test":
             try:
                 self.epochs = int(Config["epochs"])
             except ValueError:
-                print ("Wrong quantity of epochs for training.")
-                stop = True
+                raise ValueError("Wrong quantity of epochs for training.")
             try:
-                self.trainBatch = int(Config["trainbatch"])
+                self.train_batch = int(Config["train_batch"])
             except ValueError:
-                print ("Wrong batch size for training.")
-                stop = True
+                raise ValueError("Wrong batch size for training.")
             try:
                 self.verbose = int(Config["verbose"])
             except ValueError:
-                print ("Wrong value of 'verbose' flag for training.")
-                stop = True
-            if Config["tempsave"] == "yes":
-                if len(Config["temppath"]) == 0 or not os.path.isdir(fullPath(Config, "temppath")):
-                    print ("Wrong path to folder with intermediate results.")
-                    stop = True
+                raise ValueError("Wrong value of 'verbose' flag for training.")
+            if Config["save_intermediate_results"] == "True":
+                if len(Config["intermediate_results_path"]) == 0 or \
+                        not os.path.isdir(get_absolute_path(Config, "intermediate_results_path")):
+                    raise ValueError("Wrong path to folder with intermediate results.")
         """
-        if Config["runfor"].lower() != "train":
-            if Config["modelinfo"] == "yes":
-                if len(Config["infopath"]) == 0 or not os.path.isdir(fullPath(Config, "infopath")):
-                    print ("Wrong path to folder containing model info.")
-                    stop = True
+        if Config["type_of_execution"].lower() != "train":
+            if Config["modelinfo"] == "True":
+                if len(Config["infopath"]) == 0 or not os.path.isdir(get_absolute_path(Config, "infopath")):
+                    raise ValueError("Wrong path to folder containing model info.")
         """
-        if Config["runfor"] == "crossvalidation":
-            if Config["cvsave"] == "yes":
-                if len(Config["cvpath"]) == 0 or not os.path.isdir(fullPath(Config, "cvpath")):
-                    print("Wrong path to the cross-validation's resulting folder.")
-                    stop = True
+        if Config["type_of_execution"] != "train" and Config["customrank"] == "yes":
             try:
-                kfold = int(Config["kfold"])
+                self.rank_threshold = float(Config["rank_threshold"])
             except ValueError:
-                print ("Wrong k-fold value.")
-                stop = True
-        if stop:
-            print ("Stop.")
-            Config["error"] = True
-            return
+                raise ValueError("Wrong custom rank threshold.")
+        if Config["type_of_execution"] == "crossvalidation":
+            if Config["save_cross_validations_datasets"] == "True":
+                if len(Config["cross_validations_datasets_path"]) == 0 or not os.path.isdir(
+                        get_absolute_path(Config, "cross_validations_datasets_path")):
+                    raise ValueError("Wrong path to the cross-validation's resulting folder.")
+            try:
+                cross_validations_total = int(Config["cross_validations_total"])
+            except ValueError:
+                raise ValueError("Wrong k-fold value.")
+        #if stop:
+        #    print ("Stop.")
+        #    Config["error"] = True
+        #    return
         if Config["type"].lower() == "snn":
             SnnModel(Config)
         elif Config["type"].lower() == "ltsm":

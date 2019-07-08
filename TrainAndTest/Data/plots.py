@@ -2,13 +2,13 @@ import numpy
 import matplotlib.pyplot as plt
 
 def showDocsByLength(Config):
-    trainDocs = Config["traindocs"]
-    testDocs = Config["testdocs"]
+    train_docs = Config["train_docs"]
+    test_docs = Config["test_docs"]
     fig, (plot1, plot2) = plt.subplots(1, 2, figsize=(10 ,6))
     dictLens = dict()
     dictLens1 = dict()
-    for i in range(len(trainDocs)):
-        lend = "%5d " %(len(trainDocs[i].words))
+    for i in range(len(train_docs)):
+        lend = "%5d " %(len(train_docs[i].words))
         if not lend in dictLens:
             dictLens[lend] = 1
         else:
@@ -20,8 +20,8 @@ def showDocsByLength(Config):
     plot1.set_ylabel("Documents")
     plot1.set_xlabel("Tokens")
     plot1.plot(lvars, locc, "b.-")
-    for i in range(len(testDocs)):
-        lend = "%5d " %(len(testDocs[i].words))
+    for i in range(len(test_docs)):
+        lend = "%5d " %(len(test_docs[i].words))
         if not lend in dictLens1:
             dictLens1[lend] = 1
         else:
@@ -37,14 +37,14 @@ def showDocsByLength(Config):
     plt.show()
 
 def showDocsByLabs(Config):
-    trainDocs = Config["traindocs"]
-    testDocs = Config["testdocs"]
-    categories = Config["cats"]
+    train_docs = Config["train_docs"]
+    test_docs = Config["test_docs"]
+    categories = Config["predefined_categories"]
     fig, (plot1, plot2) = plt.subplots(1, 2, figsize=(10 ,6))
     dictLabs = dict()
     dictLabs1 = dict()
-    for i in range(len(trainDocs)):
-        lab = "%5d " %(trainDocs[i].qLabs[0])
+    for i in range(len(train_docs)):
+        lab = "%5d " %(train_docs[i].qLabs[0])
         if not lab in dictLabs:
             dictLabs[lab] = 1
         else:
@@ -57,8 +57,8 @@ def showDocsByLabs(Config):
     plot1.set_xlabel("Labels")
     plot1.set_xticks(numpy.arange(0, len(categories), step=1))
     plot1.plot(lvars1, locc1, "bo-")
-    for i in range(len(testDocs)):
-        lab = "%5d " %(testDocs[i].qLabs[0])
+    for i in range(len(test_docs)):
+        lab = "%5d " %(test_docs[i].qLabs[0])
         if not lab in dictLabs1:
             dictLabs1[lab] = 1
         else:

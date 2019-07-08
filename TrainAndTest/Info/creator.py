@@ -4,7 +4,7 @@ import json
 import collections
 import webbrowser
 from datetime import date, timedelta
-from Utils.utils import fullPath
+from Utils.utils import get_absolute_path
 
 class InfoCreator:
     def __init__(self, Config):
@@ -18,7 +18,7 @@ class InfoCreator:
             prevDays = int(arr[0])
             startDay = date.today() - timedelta(days=prevDays)
             self.startId = "%d%0.2d%0.2d000000" % (startDay.year, startDay.month, startDay.day)
-        self.path = fullPath(Config, "reportspath")
+        self.path = get_absolute_path(Config, "reports_path")
         os.chdir(self.path)
         for f in glob.glob("*"):
             resPath = self.path + "/" + f
@@ -98,7 +98,8 @@ class InfoCreator:
         mainHtml = "<div style='width:100%; height: 100%; min-height: 100%;'>"
         mainHtml += "<ul class='menu' style='border-bottom: 2px solid black;'>"
         for i in range(len(pages)):
-            mainHtml += "<li class='menu' id='%s' onclick='changePage(\"%s\")'>%s</li>"%("page" + pages[i], pages[i], pages[i])
+            mainHtml += "<li class='menu' id='%s' onclick='changePage(\"%s\")'>%s</li>"%(
+                                                                        "page" + pages[i], pages[i], pages[i])
         mainHtml += "</ul><div id='mainPage' style='height:100%; min-height:100%; width: 100%; overflow: auto;'>"
         mainHtml += "</div>"
         return mainHtml

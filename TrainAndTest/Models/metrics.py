@@ -1,4 +1,4 @@
-from Utils.utils import leftAlign
+from Utils.utils import align_to_left
 
 metricsNames = {
     "d_docs": "Documents",
@@ -32,12 +32,12 @@ class ModelMetrics:
         self.model = model
         self.labels = model.testLabels
         self.predictions = model.predictions
-        self.cNames = [''] * len(model.Config["cats"])
-        for k, v in model.Config["cats"].items():
+        self.cNames = [''] * len(model.Config["predefined_categories"])
+        for k, v in model.Config["predefined_categories"].items():
             self.cNames[v] = k
-        self.cats = model.Config["cats"]
+        self.cats = model.Config["predefined_categories"]
         self.useProbabilities = model.useProbabilities
-        self.rankThreshold = 0.5
+        self.rank_threshold = model.rank_threshold
         self.diffThreshold = 10
         self.model.metrics = self.initDicts()
         self.getMetrics()
@@ -55,7 +55,7 @@ class ModelMetrics:
     def rankIndicator(self, labels, predictions, index):
         actual = labels[index] == 1
         if self.useProbabilities:
-            predicted = predictions[index] >= self.rankThreshold
+            predicted = predictions[index] >= self.rank_threshold
             """
             if actual and not predicted and self.diffThreshold > 0:
                 notActual = 0
@@ -231,14 +231,14 @@ def printMetrics(model):
     print("  General:")
     for key, val in dt.items():
         if key.startswith("d_") or key.startswith("dd_"):
-            print(f"    {leftAlign(metricsNames[key], 35)}   {'%5d' % val}")
+            print(f"    {align_to_left(metricsNames[key], 35)}   {'%5d' % val}")
         else:
-            print(f"    {leftAlign(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
+            print(f"    {align_to_left(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
     sortedDict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
     print("\n  F1-Measure by category in descend order:")
     for i in range(len(sortedDict)):
         if sortedDict[i][0] != "all":
-            print(f"    {leftAlign(sortedDict[i][0], 35)}\u200e   {'%.2f%%' % (sortedDict[i][1]['f1'] * 100)}")
+            print(f"    {align_to_left(sortedDict[i][0], 35)}\u200e   {'%.2f%%' % (sortedDict[i][1]['f1'] * 100)}")
 
 def printAveragedMetrics(arrMetrics, Config):
     print("Averaged metrics:")
@@ -257,18 +257,18 @@ def printAveragedMetrics(arrMetrics, Config):
     dt = model.metrics["all"]
     for key, val in dt.items():
         if not (key.startswith("d_") or key.startswith("dd_")):
-            print(f"    {leftAlign(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
+            print(f"    {align_to_left(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
     sortedDict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
     print("\n  Averaged F1-Measure by category in descend order:")
     for i in range(len(sortedDict)):
         if sortedDict[i][0] != "all":
-            print(f"    {leftAlign(sortedDict[i][0], 35)}\u200e   {'%.2f%%' % (sortedDict[i][1]['f1'] * 100)}")
+            print(f"    {align_to_left(sortedDict[i][0], 35)}\u200e   {'%.2f%%' % (sortedDict[i][1]['f1'] * 100)}")
 
 class SimpleModel:
     def __init__(self, Config):
         self.metrics = dict()
         self.metrics["all"] = dict()
-        for key in Config["cats"].keys():
+        for key in Config["predefined_categories"].keys():
             self.metrics[key] = dict()
         for key, val in self.metrics.items():
             for k in metricsNames.keys():

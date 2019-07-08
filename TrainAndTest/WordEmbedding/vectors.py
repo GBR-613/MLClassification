@@ -4,46 +4,37 @@ import datetime
 import gensim
 from gensim.models.word2vec import Word2Vec
 from gensim.models.callbacks import CallbackAny2Vec
-from Utils.utils import fullPath, showTime, updateParams
+from Utils.utils import get_absolute_path, show_time, updateParams
 
 class Embedding:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Word Embedding ===")
         updateParams(Config, DefConfig, kwargs)
         self.Config = Config
-        self.DefConfig = DefConfig;
-        if not os.path.isdir(os.path.dirname(fullPath(Config, "w2vmodelpath"))):
-            print ("Wrong path to W2V model. Word Embedding can't be done.")
-            Config["error"] = True
+        self.DefConfig = DefConfig
+        if not os.path.isdir(os.path.dirname(get_absolute_path(Config, "model_path"))):
+            raise ValueError("Wrong path to W2V model. Word Embedding can't be done.")
+        if Config["need_create_model"] != "True":
             return
-        if Config["w2vcreate"] != "yes":
-            return
-        if len(Config["w2vcorpuspath"]) == 0 or not os.path.isfile(fullPath(Config, "w2vcorpuspath")):
-            print ("Wrong corpus path. W2V model can't be created.")
-            Config["error"] = True
-            return
+        if len(Config["data_corpus_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "data_corpus_path")):
+            raise ValueError("Wrong corpus path. W2V model can't be created.")
         try:
-            self.epochs = int(self.Config["w2vepochs"])
+            self.epochs = int(self.Config["epochs_total"])
         except ValueError:
-            print ("Wrong quantity of epochs for training. W2V model can't be created.")
-            Config["error"] = True
-            return
+            raise ValueError("Wrong quantity of epochs for training. W2V model can't be created.")
         try:
-            self.ndim = int(self.Config["w2vdim"])
+            self.ndim = int(self.Config["vectors_dimension"])
         except ValueError:
-            print ("Wrong size of resulting vectors. W2V model can't be created.")
-            Config.error = True
-            return
-
+            raise ValueError("Wrong size of resulting vectors. W2V model can't be created.")
         self.createW2VModel()
 
     def createW2VModel(self):
         sentences = []
         count = 0
-        print ("Start to create W2V model...")
-        print ("Get input data...")
+        print("Start to create W2V model...")
+        print("Get input data...")
         ds = datetime.datetime.now()
-        with open(fullPath(self.Config, "w2vcorpuspath"), 'r', encoding='UTF-8') as f:
+        with open(get_absolute_path(self.Config, "data_corpus_path"), 'r', encoding='UTF-8') as f:
             for line in f:
                 if len(line.strip()) == 0:
                     continue
@@ -52,7 +43,7 @@ class Embedding:
                 sentences.append(words)
         f.close()
         de = datetime.datetime.now()
-        print("Got %d lines from file %s in %s"% (count, fullPath(self.Config, "w2vcorpuspath"), showTime(ds, de)))
+        print("Got %d lines from file %s in %s"% (count, get_absolute_path(self.Config, "data_corpus_path"), show_time(ds, de)))
         numpy.random.shuffle(sentences)
 
         logger = EpochLogger(self.epochs)
@@ -61,27 +52,27 @@ class Embedding:
         print("Build vocabulary...")
         w2v.build_vocab(sentences)
         de = datetime.datetime.now()
-        print("Vocabulary is built in %s" % (showTime(ds, de)))
+        print("Vocabulary is built in %s" % (show_time(ds, de)))
         print("Train model...")
         ds = datetime.datetime.now()
-        w2v.train(sentences, epochs=int(self.Config["w2vepochs"]), total_examples=len(sentences), callbacks=[logger])
+        w2v.train(sentences, epochs=int(self.Config["epochs_total"]), total_examples=len(sentences), callbacks=[logger])
         de = datetime.datetime.now()
-        print("W2V model is completed in %s" % (showTime(ds, de)))
+        print("W2V model is completed in %s" % (show_time(ds, de)))
 
-        modelPath = fullPath(self.Config, "w2vmodelpath")
-        if self.Config["w2vtimeinname"]:
-            modelName = os.path.basename(modelPath)
+        created_model_path = get_absolute_path(self.Config, "model_path")
+        if self.Config["include_current_time_in_model_name"]:
+            modelName = os.path.basename(created_model_path)
             dt = "-" + datetime.datetime.now().strftime("%Y-%b-%d-%H%M%S")
             pInd = modelName.rfind(".")
             if pInd > 0:
                 modelName = modelName[:pInd] + dt + modelName[pInd:]
             else:
                 modelName += dt
-        finalPath = os.path.dirname(modelPath) + "/" + modelName
+        finalPath = os.path.dirname(created_model_path) + "/" + modelName
         ds = datetime.datetime.now()
         w2v.wv.save_word2vec_format(finalPath, binary=False)
         de = datetime.datetime.now()
-        print("W2V model %s is saved in the text format in %s\n" % (finalPath, showTime(ds, de)))
+        print("W2V model %s is saved in the text format in %s\n" % (finalPath, show_time(ds, de)))
 
 class EpochLogger(CallbackAny2Vec):
     def __init__(self, epochs):
