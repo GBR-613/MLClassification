@@ -5,41 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3acbb607-f85d-4a7f-8ba2-0256ae3bafe8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/TrainAndTest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/TrainAndTest.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Data/data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/plots.py" beforeDir="false" afterPath="$PROJECT_DIR$/Data/plots.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/General/launcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/General/launcher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Info/creator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Info/creator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Info/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/Info/scripts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/bert.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/bert.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/cnn.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/cnn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/consolidation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/consolidation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/dataPreparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/dataPreparation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ltsm.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ltsm.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/pac.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/pac.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/perceptron.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/perceptron.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/reports.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/reports.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/ridge.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ridge.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/sgd.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/sgd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/snn.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/snn.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/svc.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/svc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Preprocess/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocess/preprocess.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Preprocess/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocess/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tokenization/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tokenization/server.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tokenization/tagger.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tokenization/tokenization.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tokenization/utils.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Utils/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Utils/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WordEmbedding/vectors.py" beforeDir="false" afterPath="$PROJECT_DIR$/WordEmbedding/vectors.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/config.cfg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/curInfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/curInfo.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/info.py" beforeDir="false" afterPath="$PROJECT_DIR$/info.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/start.py" beforeDir="false" afterPath="$PROJECT_DIR$/start.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -49,17 +20,86 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/TrainAndTest$start.coverage" NAME="start Coverage Results" MODIFIED="1562563843109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/TrainAndTest$start.coverage" NAME="start Coverage Results" MODIFIED="1562596645343" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WordsGame$start.coverage" NAME="start Coverage Results" MODIFIED="1553098115386" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WordsGame$vectors.coverage" NAME="vectors Coverage Results" MODIFIED="1552845886062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/WordEmbedding" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.cfg">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+            <state relative-caret-position="367">
+              <caret line="148" column="30" lean-forward="true" selection-start-line="148" selection-start-column="30" selection-end-line="148" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/General/launcher.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="121" column="28" selection-start-line="121" selection-start-column="28" selection-end-line="121" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Models/consolidation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/info.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Utils/utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="214">
+              <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/start.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" selection-start-line="9" selection-end-line="9" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Models/controller.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="48" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="48" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -75,9 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>print (&quot;Start testing...&quot;)</find>
-      <find>tmp_eval_accuracy = accuracy(logits, label_ids</find>
-      <find>for j in range(self.qLabs):</find>
       <find>report.docs[self.Config[&quot;test_docs&quot;][i].name][key] = &quot;,&quot;.join(labs)</find>
       <find>report.models[&quot;consolidated&quot;] = self.metrics</find>
       <find>consolidatedRankThreshold</find>
@@ -105,6 +142,9 @@
       <find>dimension</find>
       <find>w2vTimeInName</find>
       <find>w2vModelPath</find>
+      <find>parseConfig</find>
+      <find>parseConfigInfo</find>
+      <find>request</find>
     </findStrings>
     <replaceStrings>
       <replace>load_data</replace>
@@ -145,7 +185,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Utils/__init__.py" />
         <option value="$PROJECT_DIR$/evaluation/__init__.py" />
         <option value="$PROJECT_DIR$/models/__init__.py" />
         <option value="$PROJECT_DIR$/WordEmbedding/__init__.py" />
@@ -170,11 +209,9 @@
         <option value="$PROJECT_DIR$/Models/bertClassifier.py" />
         <option value="$PROJECT_DIR$/Info/creator.py" />
         <option value="$PROJECT_DIR$/Models/dataPreparation.py" />
-        <option value="$PROJECT_DIR$/start.py" />
         <option value="$PROJECT_DIR$/Tokenization/tokenization.py" />
         <option value="$PROJECT_DIR$/Tokenization/tagger.py" />
         <option value="$PROJECT_DIR$/Tokenization/server.py" />
-        <option value="$PROJECT_DIR$/Utils/utils.py" />
         <option value="$PROJECT_DIR$/Info/scripts.js" />
         <option value="$PROJECT_DIR$/Models/metrics.py" />
         <option value="$PROJECT_DIR$/Models/snn.py" />
@@ -183,19 +220,22 @@
         <option value="$PROJECT_DIR$/Data/data.py" />
         <option value="$PROJECT_DIR$/Preprocess/preprocess.py" />
         <option value="$PROJECT_DIR$/Data/plots.py" />
-        <option value="$PROJECT_DIR$/Models/consolidation.py" />
         <option value="$PROJECT_DIR$/Models/controller.py" />
         <option value="$PROJECT_DIR$/Models/reports.py" />
         <option value="$PROJECT_DIR$/Models/ridge.py" />
         <option value="$PROJECT_DIR$/Models/base.py" />
         <option value="$PROJECT_DIR$/Models/pac.py" />
         <option value="$PROJECT_DIR$/Models/perceptron.py" />
-        <option value="$PROJECT_DIR$/General/launcher.py" />
         <option value="$PROJECT_DIR$/Models/bert.py" />
         <option value="$PROJECT_DIR$/Models/ltsm.py" />
         <option value="$PROJECT_DIR$/Models/svc.py" />
         <option value="$PROJECT_DIR$/Models/sgd.py" />
         <option value="$PROJECT_DIR$/config.cfg" />
+        <option value="$PROJECT_DIR$/info.py" />
+        <option value="$PROJECT_DIR$/start.py" />
+        <option value="$PROJECT_DIR$/Utils/utils.py" />
+        <option value="$PROJECT_DIR$/Models/consolidation.py" />
+        <option value="$PROJECT_DIR$/General/launcher.py" />
       </list>
     </option>
   </component>
@@ -265,7 +305,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../sf_test" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -316,7 +356,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/start.py" />
-      <option name="PARAMETERS" value="./config.cfg" />
+      <option name="PARAMETERS" value="./config.cfg D(load_w2v_model=False;enable_tokenization=True)|M(type=svc;name=svc;type_of_execution=crossvalidation)|C()" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />
@@ -403,23 +443,25 @@
       <workItem from="1562258768416" duration="4534000" />
       <workItem from="1562490140928" duration="15924000" />
       <workItem from="1562563019463" duration="802000" />
+      <workItem from="1562565218571" duration="2461000" />
+      <workItem from="1562583974043" duration="41000" />
+      <workItem from="1562584052184" duration="11964000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="418899000" />
+    <option name="totallyTimeSpent" value="433365000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="1" width="1680" height="983" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18980344" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19656019" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32968035" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.33679354" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39907727" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.40046567" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39813736" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -432,15 +474,40 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info active="true" anchor="right" id="SciView" order="3" sideWeight="0.4831199" visible="true" weight="0.10687961" />
+      <window_info anchor="right" id="SciView" order="3" sideWeight="0.47962746" visible="true" weight="0.10687961" />
       <window_info anchor="right" id="Database" order="4" />
-      <window_info anchor="right" x="0" y="0" width="370" height="783" id="Documentation" order="5" sideWeight="0.5168801" side_tool="true" visible="true" weight="0.10687961" />
+      <window_info anchor="right" x="0" y="0" width="370" height="783" id="Documentation" order="5" sideWeight="0.5203725" side_tool="true" visible="true" weight="0.10687961" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="actions_def[action[0]]" language="Python" />
+        <watch expression="(actions_def[action[0]])[0]" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
   <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>(actions_def[action[0]])[0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>actions_def[action[0]]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>actions_def[action[0]][0]</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
     <expressions id="evaluateExpression">
       <expression>
         <expression-string>Config</expression-string>
@@ -465,10 +532,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/dataProcessing/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/Utils/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/WordEmbedding/__init__.py" />
     <entry file="file://$PROJECT_DIR$/models/__init__.py" />
     <entry file="file://$PROJECT_DIR$/evaluation/__init__.py" />
@@ -506,33 +569,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2595">
           <caret line="182" selection-start-line="182" selection-end-line="182" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Preprocess/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Utils/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="61" column="18" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/start.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -626,16 +662,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Models/controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1800">
-          <caret line="120" selection-start-line="120" selection-end-line="120" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Models/dataPreparation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2910">
@@ -650,16 +676,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="262">
           <caret line="39" column="50" selection-start-line="39" selection-start-column="50" selection-end-line="39" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Models/consolidation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1425">
-          <caret line="58" column="21" selection-start-line="58" selection-start-column="21" selection-end-line="58" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -723,16 +739,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/General/launcher.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="85" column="1" selection-start-line="85" selection-start-column="1" selection-end-line="85" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Models/reports.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -760,10 +766,80 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Data/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Preprocess/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" selection-start-line="47" selection-end-line="47" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/info.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="48" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/config.cfg">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+        <state relative-caret-position="367">
+          <caret line="148" column="30" lean-forward="true" selection-start-line="148" selection-start-column="30" selection-end-line="148" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/start.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Utils/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/consolidation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/General/launcher.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="121" column="28" selection-start-line="121" selection-start-column="28" selection-end-line="121" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

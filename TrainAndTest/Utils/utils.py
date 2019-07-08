@@ -32,9 +32,12 @@ def get_absolute_path(Config, relPath, opt = ""):
 
 def get_configuration(parser, section):
     DefConfig = {}
-    options = parser.items(section)
-    for i in range(len(options)):
-        DefConfig[options[i][0]] = options[i][1]
+    try:
+        options = parser.items(section)
+        for i in range(len(options)):
+            DefConfig[options[i][0]] = options[i][1]
+    except Exception:
+        pass
     return DefConfig
 
 

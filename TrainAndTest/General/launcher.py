@@ -1,7 +1,7 @@
 import os
 import datetime
 from pathlib import Path
-from configparser import ConfigParser, Error
+from configparser import ConfigParser
 from Preprocess.preprocess import Preprocessor
 from WordEmbedding.vectors import Embedding
 from Data.data import DataLoader
@@ -11,18 +11,28 @@ from Utils.utils import get_configuration, get_absolute_path
 from Info.creator import InfoCreator
 
 Config = {}
+parser = ConfigParser()
+actions_list=[]
 
-def parseConfig(path):
-    parser = ConfigParser()
+actions_def = {
+    "P":(Preprocessor,"preprocess"),
+    "W":(Embedding,"word_embedding"),
+    "D":(DataLoader,"data"),
+    "M":(ModelController,"model"),
+    "C":(Collector,"")
+}
+
+
+def parse_config(path):
     parser.read_file(open(path))
     #try:
     sections = parser.sections()
     for i in range(len(sections)):
         options = parser.items(sections[i])
-        if sections[i] == "requests":
-            if len(options) == 0 or not parser.has_option("requests", "request"):
-                print ("Config file doesn't contain request for any process. Exit.")
-                return
+        #if sections[i] == "requests":
+        #    if len(options) == 0 or not parser.has_option("requests", "request"):
+        #        print ("Config file doesn't contain request for any process. Exit.")
+        #        return
         for j in range(len(options)):
             Config[options[j][0]] = options[j][1]
     if not Config["home"]:
@@ -36,27 +46,35 @@ def parseConfig(path):
     Config["resources"]["reqid"] = Config["reqid"]
     Config["resources"]["models"] = {}
     Config["resources"]["w2v"] = {}
+    return parser
     #Config["error"] = False
-    parseRequestAndLaunchPipe(parser, Config["request"])
+    #grisha parseRequestAndLaunchPipe(parser, Config["request"])
     #except Error:
     #    raise Exception("Config file's parsing error. Exit.")
 
 
-def parseRequestAndLaunchPipe(parser, req):
+def parse_request(req):
     print ("=== Request " + Config["reqid"] + " ===")
-    req = req.strip()
+    print(req)
+    if len(req) == 0:
+        req = (Config["request"]).strip().replace(" ", "")
+    if len(req) == 0:
+        raise ValueError("Request is not defined, nothing to do")
     tasks = req.split("|")
     for i in range(len(tasks)):
-        task = tasks[i].replace(" ", "")
+        task = tasks[i]
         process = task[0]
+        if process not in actions_def.keys():
+            raise ValueError("Wrong process: " + process)
+        '''
         if not (process == "P" or process == "W" or process == "D" or process == "M" or process == "C"):
             print ("Request contains wrong name of process ('%s')."%(process))
             print ("It should be one of 'P' (preprocess), 'W' (word embedding), " +
                    "'D' (data definition), 'M' (model) or 'C' (consolidate results). Exit.")
             return
+        '''
         if  not (task[1] == "(" and task[-1] == ")"):
-            print ("Request contains wrong definition of process ('%s'). Exit."%(task))
-            return
+            raise ValueError("Request contains wrong definition of process ('%s'). Exit."%(task))
         definition = task[2:-1]
         kwargs = {}
         if definition != "":
@@ -64,10 +82,10 @@ def parseRequestAndLaunchPipe(parser, req):
             for j in range(len(options)):
                 kvs = options[j].split("=")
                 if kvs[0].lower() not in Config:
-                    print ("Request contains wrong parameter ('%s') of process '%s'. Stop."%(kvs[0], process))
-                    return
+                    raise ValueError("Request contains wrong parameter ('%s') of process '%s'. Stop."%(kvs[0], process))
                 for k in range(len(kvs)):
                     kwargs[kvs[0].lower()] = kvs[1]
+        ''''           
         if process == "P":   #Preprocess
             DefConfig = get_configuration(parser, "preprocess")
             Preprocessor(Config, DefConfig, kwargs)
@@ -82,11 +100,26 @@ def parseRequestAndLaunchPipe(parser, req):
         else:    #Model
             DefConfig = get_configuration(parser, "model")
             ModelController(Config, DefConfig, kwargs)
-#        if Config["error"]:
-#            return
+        '''
+        actions_list.append((process, kwargs))
 
-def parseConfigInfo(path):
-    parser = ConfigParser()
+
+def work():
+    for i in range(len(actions_list)):
+        action = actions_list[i]
+        print(datetime.datetime.now())
+        print(" Start task " + action[0])
+        func = actions_def[action[0]][0]
+        kwargs = action[1]
+        action_config_name = actions_def[action[0]][1]
+        if len(action_config_name) > 0:
+            action_config = get_configuration(parser, action_config_name)
+            func(Config, action_config, kwargs)
+        else:
+            func(Config)
+
+
+def parse_config_info(path):
     parser.read_file(open(path))
     #try:
     sections = parser.sections()
