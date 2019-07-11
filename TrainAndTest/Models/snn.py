@@ -8,14 +8,13 @@ from keras.models import load_model
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Models.metrics import ModelMetrics
-from Utils.utils import get_absolute_path, show_time
+from Utils.utils import get_absolute_path, show_time, test_path
 
 class SnnModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
         if self.Config["w2vmodel"] == None:
-            if len(Config["model_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "model_path")):
-                raise ValueError("Wrong path to W2V model. Stop.")
+            test_path(Config, "model_path", "Wrong path to W2V model. Stop.")
         try:
             self.validation_data_size = float(Config["validation_data_size"])
         except ValueError:

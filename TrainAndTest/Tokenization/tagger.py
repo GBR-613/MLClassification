@@ -3,8 +3,8 @@ import subprocess
 import datetime
 from subprocess import Popen, PIPE
 from nltk.corpus import stopwords
-from Utils.utils import showTime
-from Utils.utils import fullPath
+from Utils.utils import show_time
+from Utils.utils import get_absolute_path
 
 class TokensFromTagger:
     def __init__(self, Config):
@@ -12,8 +12,8 @@ class TokensFromTagger:
         self.tokenize(Config)
 
     def tokenize(self, Config):
-        taggerPath = fullPath(Config, "taggerpath")
-        if (len(taggerPath) == 0 or not os.path.exists(taggerPath)):
+        taggerPath = get_absolute_path(Config, "taggerpath")
+        if not taggerPath or not os.path.exists(taggerPath):
             print ("Wrong path to the tagger's jar. Tokenization can't be done")
             Config["error"] = True
             return
@@ -36,4 +36,4 @@ class TokensFromTagger:
         reply = srv.communicate()
         de = datetime.datetime.now()
         print(reply[0].decode())
-        print("All process is done in %s" % (showTime(ds, de)))
+        print("All process is done in %s" % (show_time(ds, de)))

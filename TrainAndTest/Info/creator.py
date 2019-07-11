@@ -35,7 +35,7 @@ class InfoCreator:
                 except json.JSONDecodeError:
                     print ("Warning: file %s doesn't have json format. Skipped."%(resPath))
             json_file.close()
-        if len(self.info) == 0:
+        if not self.info:
             print ("Folder %s doesn't contain reports, created in required diapason of dates. Exit."%(self.path))
             return
         self.html = ""

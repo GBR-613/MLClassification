@@ -14,7 +14,7 @@ from Models.bertClassifier import BertForMultiLabelSequenceClassification, \
      Args, DataProcessor, convert_examples_to_features, getLogger, accuracy
 from Data.data import compose_tsv
 from Models.metrics import printAveragedMetrics
-from Utils.utils import get_absolute_path, show_time
+from Utils.utils import get_absolute_path, show_time, test_path
 
 class BertModel(BaseModel):
     def __init__(self, Config):
@@ -29,7 +29,7 @@ class BertModel(BaseModel):
             raise Exception
         self.args = Args(get_absolute_path(self.Config, "pretrained_bert_model_path"),
                          get_absolute_path(self.Config, "resulting_bert_files_path")) # model: pytorch_ber.gz
-        self.max_seq_length = min(self.maxBertSeqLength, self.Config["maxseqlen"])
+        self.max_seq_length = min(self.maxBertSeqLength, self.Config["max_seq_len"])
         if self.Config["type_of_execution"] != "test":
             self.do_train = True
         if self.Config["type_of_execution"] != "train":
@@ -52,12 +52,8 @@ class BertModel(BaseModel):
         self.launchProcess()
 
     def isCorrectPath(self, Config):
-        if len(Config["pretrained_bert_model_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "pretrained_bert_model_path")):
-            print("Wrong path to archive with pre-trained BERT model. Stop.")
-            return False
-        if len(Config["resulting_bert_files_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "resulting_bert_files_path")):
-            print("Wrong path to folder with resulting BERT files. Stop.")
-            return False
+        test_path(Config, "pretrained_bert_model_path", "Wrong path to archive with pre-trained BERT model. Stop.")
+        test_path(Config, "resulting_bert_files_path", "Wrong path to folder with resulting BERT files. Stop.")
         return True
 
 

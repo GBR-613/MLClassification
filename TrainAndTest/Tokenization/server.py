@@ -79,7 +79,7 @@ class TokensFromServer:
                 shutil.rmtree(outPath)
             os.mkdir(outPath)
         self.startProcess = False
-        os.chdir(inPath);
+        os.chdir(inPath)
         for ff in glob.glob("*"):
             if os.path.isdir(inPath + "/" + ff):
                 dPath = inPath + "/" + ff
@@ -106,7 +106,7 @@ class TokensFromServer:
                 else:
                     result = ''
                 line = line.replace('\r', '').replace('\n', '')
-                if len(line) == 0:
+                if not line:
                     continue
                 toks = line.split()
                 if len(toks) < 3:

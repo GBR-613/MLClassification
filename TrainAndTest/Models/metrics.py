@@ -223,7 +223,7 @@ class ModelMetrics:
             self.model.metrics["all"]["microF1"] = 2 * mtp / (mtp + mtn + mlabs)
 
 def printMetrics(model):
-    if len(model.metrics) == 0:
+    if not model.metrics:
         print("Metrics isn't calculated yet...")
         return
     print("Model's metrics:")

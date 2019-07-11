@@ -119,11 +119,11 @@ class DataPreparation:
                 with open(get_absolute_path(self.model.Config, "indexer_path"), 'wb') as handle:
                     pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 handle.close()
-                if self.model.Config["maxdoclen"] > self.model.Config["maxseqlen"]:
+                if self.model.Config["max_doc_len"] > self.model.Config["max_seq_len"]:
                     print("Most of documents from training set have less then %d tokens. Longer documents will be truncated."%(
-                        self.model.Config["maxseqlen"]))
+                        self.model.Config["max_seq_len"]))
             self.model.trainArrays = pad_sequences(tokenizer.texts_to_sequences(trainTexts),
-                                                    maxlen=self.model.Config["maxseqlen"])
+                                                    maxlen=self.model.Config["max_seq_len"])
             self.model.trainLabels = numpy.concatenate([numpy.array(x.labels).
                             reshape(1, len(self.model.Config["predefined_categories"]))
                                                         for x in self.model.Config[self.keyTrain]])
@@ -141,7 +141,7 @@ class DataPreparation:
         for i in range(len(self.model.Config[self.keyTest])):
             testTexts.append(self.model.Config[self.keyTest][i].lines)
         self.model.testArrays = pad_sequences(tokenizer.texts_to_sequences(testTexts),
-                                              maxlen=self.model.Config["maxseqlen"])
+                                              maxlen=self.model.Config["max_seq_len"])
         self.model.testLabels = numpy.concatenate([numpy.array(x.labels).
                             reshape(1, len(self.model.Config["predefined_categories"]))
                                                    for x in self.model.Config[self.keyTest]])
@@ -170,10 +170,10 @@ class DataPreparation:
     def getCharVectors(self):
         ds = datetime.datetime.now()
         """
-        if self.model.Config["maxcharsdoclen"] > self.model.Config["maxcharsseqlen"]:
+        if self.model.Config["max_chars_doc_len"] > self.model.Config["max_chars_seq_len"]:
             print(
                 "Most of documents from training set have less then %d characters. Longer documents will be truncated." % (
-                    self.model.Config["maxcharsseqlen"]))
+                    self.model.Config["max_chars_seq_len"]))
         """
         if self.model.Config["type_of_execution"] != "test":
             self.model.trainArrays = numpy.concatenate([self.stringToIndexes(" ".join(x.words))
@@ -199,13 +199,13 @@ class DataPreparation:
 
     def stringToIndexes(self, str):
         chDict = arabic_charset()
-        str2ind = numpy.zeros(self.model.Config["maxcharsseqlen"], dtype='int64')
-        strLen = min(len(str), self.model.Config["maxcharsseqlen"])
+        str2ind = numpy.zeros(self.model.Config["max_chars_seq_len"], dtype='int64')
+        strLen = min(len(str), self.model.Config["max_chars_seq_len"])
         for i in range(1, strLen + 1):
             c = str[-i]
             if c in chDict:
                 str2ind[i - 1] = chDict[c]
-        return str2ind.reshape(1, self.model.Config["maxcharsseqlen"])
+        return str2ind.reshape(1, self.model.Config["max_chars_seq_len"])
 
     def getDataForSklearnClassifiers(self):
         mlb = None

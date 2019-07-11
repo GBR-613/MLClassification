@@ -1,5 +1,6 @@
 *.log
-TrainAndTest/.idea/*l
+TrainAndTest/.idea/*
 TrainAndTest/.idea/workspace.xml
 TrainAndTest/.idea/inspectionProfiles/
 TrainAndTest/.idea/inspectionProfiles/*
+TrainAndTest/.idea/workspace.xml

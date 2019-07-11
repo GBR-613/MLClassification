@@ -38,7 +38,7 @@ class CNNModel(BaseModel):
 
     def createModel(self):
         embeddingSize = 128
-        maxSeqLength = self.Config["maxcharsseqlen"]
+        maxSeqLength = self.Config["max_chars_seq_len"]
         convLayersData = [[256, 10], [256, 7], [256, 5], [256, 3]]
         dropout_p = 0.1
         optimizer = 'adam'

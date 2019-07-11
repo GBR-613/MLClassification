@@ -10,7 +10,7 @@ from keras.callbacks import ModelCheckpoint
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Models.metrics import ModelMetrics
-from Utils.utils import get_absolute_path, show_time
+from Utils.utils import get_absolute_path, show_time, test_path, correct_path
 
 class LTSMModel(BaseModel):
     def __init__(self, Config):
@@ -39,12 +39,9 @@ class LTSMModel(BaseModel):
 
     def isCorrectPath(self, Config):
         if self.Config["w2vmodel"] == None:
-            if len(Config["model_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "model_path")):
-                print("Wrong path to W2V model. Stop.")
-                return False
-        if len(Config["indexer_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "indexer_path")):
-            if Config["type_of_execution"] == "test" or (len(Config["indexer_path"]) != 0 and not os.path.isdir(
-                    os.path.dirname(get_absolute_path(Config, "indexer_path")))):
+            test_path(Config, "model_path", "Wrong path to W2V model. Stop.")
+        if not correct_path(Config, "indexer_path"):
+            if Config["type_of_execution"] == "test":
                 print("Wrong path to indexer. Stop.")
                 return False
         return True
@@ -56,10 +53,10 @@ class LTSMModel(BaseModel):
 
     def createModel(self):
         model = Sequential()
-        model.add(Embedding(self.maxWords, self.ndim, input_length=self.Config["maxseqlen"]))
+        model.add(Embedding(self.maxWords, self.ndim, input_length=self.Config["max_seq_len"]))
         model.layers[0].set_weights([self.embMatrix])
         model.layers[0].trainable = False
-        model.add(LSTM(self.Config["maxseqlen"]))
+        model.add(LSTM(self.Config["max_seq_len"]))
         model.add(Dropout(0.2))
         model.add(Dense(256, activation='relu'))
         model.add(Dense(len(self.Config["predefined_categories"]), activation='sigmoid'))

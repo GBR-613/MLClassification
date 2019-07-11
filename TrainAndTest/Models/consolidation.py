@@ -11,7 +11,7 @@ from Models.reports import Report
 class Collector:
     def __init__(self, Config):
         self.Config = Config
-        if "test_docs" not in Config or len(Config["results"]) == 0:
+        if "test_docs" not in Config or not Config["results"]:
             print ("Documents have not been classified in this process chain.")
             print ("Consolidation can't be performed.")
             self.rank_threshold = 0.5
@@ -31,21 +31,17 @@ class Collector:
         self.save_reports = False
         self.runtime = False
         print ("\nCalculate consolidated metrics...")
-        if len(self.Config["results"]) == 0:
-            print("No results to consolidate them.")
-            print("Consolidation can't be performed.")
-            return
+        if not self.Config["results"]:
+            raise ValueError("No results to consolidate them, Consolidation can not be performed.")
         if Config["save_reports"] == "True":
-            if len(Config["reports_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "reports_path")):
-                print("Wrong path to the folder, containing reports.")
-                print("Reports can't be created.")
+            if not Config["reports_path"] or not os.path.isdir(get_absolute_path(Config, "reports_path")):
+                print("Wrong path to the folder, containing reports. Reports can not be created.")
             else:
                 self.save_reports = True
         if Config["prepare_resources_for_runtime"] == "True":
-            if (len(Config["saved_resources_path"]) == 0 or
+            if (not Config["saved_resources_path"] or
                     not os.path.isdir(get_absolute_path(Config, "saved_resources_path"))):
-                print("Wrong path to the folder, containing resources for runtime.")
-                print("Resources can't be saved.")
+                print("Wrong path to the folder, containing resources for runtime. Resources can not be saved.")
             else:
                 self.runtime = True
         print("Rank threshold for consolidated results: %.2f" % (self.rank_threshold))
@@ -100,7 +96,7 @@ class Collector:
         for i in range(len(self.Config["test_docs"])):
             report.docs[self.Config["test_docs"][i].name] = {}
             report.docs[self.Config["test_docs"][i].name]["actual"] = ",".join(self.Config["test_docs"][i].nlabs)
-        if len(self.Config["exclude_categories"]) == 0:
+        if not self.Config["exclude_categories"]:
             exclude_categories = []
         else:
             exclude_categories = self.Config["exclude_categories"].split(",")
@@ -136,7 +132,7 @@ class Collector:
 
     def prepare_resources_for_runtime(self):
         tokOpts = ["language_tokenization", "normalization", "stopwords", "exclude_positions", "extrawords",
-                   "maxseqlen", "maxcharsseqlen", "single_doc_lang_tokenization_lib_path"]
+                   "max_seq_len", "max_chars_seq_len", "single_doc_lang_tokenization_lib_path"]
         self.Config["resources"]["tokenization"] = {}
         ds = datetime.datetime.now()
         self.outDir = get_absolute_path(self.Config, "saved_resources_path") + "/"

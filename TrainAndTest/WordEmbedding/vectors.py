@@ -4,7 +4,7 @@ import datetime
 import gensim
 from gensim.models.word2vec import Word2Vec
 from gensim.models.callbacks import CallbackAny2Vec
-from Utils.utils import get_absolute_path, show_time, updateParams
+from Utils.utils import get_absolute_path, show_time, updateParams, test_path
 
 class Embedding:
     def __init__(self, Config, DefConfig, kwargs):
@@ -12,12 +12,10 @@ class Embedding:
         updateParams(Config, DefConfig, kwargs)
         self.Config = Config
         self.DefConfig = DefConfig
-        if not os.path.isdir(os.path.dirname(get_absolute_path(Config, "model_path"))):
-            raise ValueError("Wrong path to W2V model. Word Embedding can't be done.")
+        test_path(Config, "model_path", "Wrong path to W2V model. Word Embedding can't be done.")
         if Config["need_create_model"] != "True":
             return
-        if len(Config["data_corpus_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "data_corpus_path")):
-            raise ValueError("Wrong corpus path. W2V model can't be created.")
+        test_path(Config, "data_corpus_path", "Wrong corpus path. W2V model can't be created.")
         try:
             self.epochs = int(self.Config["epochs_total"])
         except ValueError:

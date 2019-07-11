@@ -1,3 +1,5 @@
+import os
+
 
 def show_time(ds,de):
     result = ''
@@ -16,7 +18,22 @@ def show_time(ds,de):
     return result
 
 
-def get_absolute_path(Config, relPath, opt = ""):
+def test_path(Config, path, error_msg):
+    if not correct_path(Config, path):
+        raise ValueError(error_msg)
+
+
+def correct_path(Config, path):
+    if not path:
+        return False
+    if not Config[path]:
+        return False
+    if not os.path.exists(get_absolute_path(Config, path)):
+        return False
+    return True
+
+
+def get_absolute_path(Config, relPath, opt=""):
     result = ""
     if relPath in Config:
         result =  Config["home"] + "/" + Config[relPath]
@@ -42,7 +59,7 @@ def get_configuration(parser, section):
 
 
 def updateParams(Config, DefConfig, kwargs):
-    if len(kwargs) == 0:  # Reset default values
+    if not kwargs:  # Reset default values
         return
     if "reset" in  kwargs.keys():
         if kwargs["reset"] == "True":

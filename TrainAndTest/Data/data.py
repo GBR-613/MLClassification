@@ -12,7 +12,7 @@ from nltk.corpus import stopwords
 from collections import namedtuple
 from Data.plots import *
 from Preprocess.utils import ArabicNormalizer
-from Utils.utils import get_absolute_path, updateParams, show_time
+from Utils.utils import get_absolute_path, updateParams, show_time, test_path
 import stanfordnlp
 
 LabeledDocument = namedtuple('LabeledDocument', 'lines words labels nlabs qLabs name')
@@ -24,36 +24,34 @@ class DataLoader:
         print ("=== Loading data ===")
         updateParams(Config, DefConfig, kwargs)
         self.Config = Config
-        self.DefConfig = DefConfig;
+        self.DefConfig = DefConfig
         self.exclude_categories = Config["exclude_categories"].split(",")
         self.sz = 0
         self.splitTrain = False
         self.topBound = 0.9
         self.charsTopBound = 0.6
 
-        if len(Config["train_data_path"]) == 0 or not os.path.isdir(get_absolute_path(Config, "train_data_path")):
-            raise ValueError("Wrong path to training set. Data can't be loaded.")
-        if len(Config["test_data_path"]) > 0 and not os.path.isdir(get_absolute_path(Config, "test_data_path")):
-            raise ValueError("Wrong path to testing set. Data can't be loaded.")
-        elif len(Config["test_data_path"]) == 0:
+        test_path(Config, "train_data_path", "Wrong path to training set. Data can't be loaded.")
+        if Config["test_data_path"]:
+            test_path(Config, "test_data_path", "Wrong path to testing set. Data can't be loaded.")
+        else:
             self.splitTrain = True
             try:
                 self.sz = float(Config["test_data_size"])
             except ValueError:
                 self.sz = 0
-            if len(Config["test_data_path"]) == 0 and (self.sz <= 0 or self.sz >= 1):
+            if not Config["test_data_path"] and (self.sz <= 0 or self.sz >= 1):
                 raise ValueError("Wrong size of testing set. Data can't be loaded.")
         if Config["enable_tokenization"] == "True":
             if Config["language_tokenization"] == "True":
                 print("GRISHA use single_doc_lang_tokenization")
                 if self.Config["use_java"] == "True":
+                    test_path(self.Config, 'single_doc_lang_tokenization_lib_path',
+                              "Wrong path to the tagger's jar. Preprocessing can't be done.")
                     lib_path = get_absolute_path(Config, 'single_doc_lang_tokenization_lib_path')
-                    if self.Config["single_doc_lang_tokenization_lib_path"] == 0 or not os.path.exists(lib_path):
-                        raise ValueError("Wrong path to the tagger's jar. Preprocessing can't be done")
-                    self.jar = subprocess.Popen(
-                            'java -Xmx2g -jar ' + lib_path + ' "' + self.Config["exclude_positions"] + '"',
-                            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True,
-                            encoding="utf-8")
+                    command_line = 'java -Xmx2g -jar ' + lib_path + ' "' + self.Config["exclude_positions"] + '"'
+                    self.jar = subprocess.Popen(command_line, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                                stderr=subprocess.PIPE, shell=True, encoding="utf-8")
                 else:
                     self.nlp_tokenizer = stanfordnlp.Pipeline(lang="ar", processors='tokenize,mwt', use_gpu=True)
             if self.Config["stopwords"] == "True":
@@ -63,7 +61,7 @@ class DataLoader:
             if self.Config["normalization"] == "True":
                 self.normalizer = ArabicNormalizer()
         if Config["load_w2v_model"] == "True":
-            if len(Config["model_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "model_path")):
+            if not Config["model_path"] or not os.path.isfile(get_absolute_path(Config, "model_path")):
                 raise ValueError("Wrong path to W2V model. Stop.")
             try:
                 self.ndim = int(self.Config["vectors_dimension"])
@@ -184,9 +182,8 @@ class DataLoader:
             if accumulate_percentage > self.topBound:
                 maxSeqLength = length
                 break
-
-        self.Config["maxdoclen"] = maxDocLen
-        self.Config["maxseqlen"] = maxSeqLength
+        self.Config["max_doc_len"] = maxDocLen
+        self.Config["max_seq_len"] = maxSeqLength
 
     def get_max_chars_length(self):
         maxDocLen = max(len(x.lines) for x in self.Config["train_docs"])
@@ -214,9 +211,8 @@ class DataLoader:
             if accumulate_percentage > self.charsTopBound:
                 maxSeqLength = length
                 break
-
-        self.Config["maxcharsdoclen"] = maxDocLen
-        self.Config["maxcharsseqlen"] = min(maxSeqLength, 512)
+        self.Config["max_chars_doc_len"] = maxDocLen
+        self.Config["max_chars_seq_len"] = min(maxSeqLength, 512)
 
     def analysis(self):
         maxDocLen = max(len(x.words) for x in self.Config["train_docs"])
@@ -232,11 +228,11 @@ class DataLoader:
                         maxCharsDocLen, minCharsDocLen, avrgCharsDocLen))
         """
         print("Length of %.1f%% documents from training set is less then %d characters." % (
-                    self.charsTopBound * 100, self.Config["maxcharsseqlen"]))
+                    self.charsTopBound * 100, self.Config["max_chars_seq_len"]))
         """
         print("Tokens in train documents: maximum: %d, minimum: %d, average: %d" % (maxDocLen, minDocLen, avrgDocLen))
         print("Length of %.1f%% documents from training set is less then %d tokens." % (
-            self.topBound * 100, self.Config["maxseqlen"]))
+            self.topBound * 100, self.Config["max_seq_len"]))
         if self.Config["show_plots"] == "True":
             showDocsByLength(self.Config);
         print("Documents for training in category : maximum: %d, minimum: %d, avegare: %d" % (
@@ -279,7 +275,8 @@ class DataLoader:
     def load_w2v_model(self):
         print ("Load W2V model...")
         ds = datetime.datetime.now()
-        self.Config["w2vmodel"] = gensim.models.KeyedVectors.load_word2vec_format(get_absolute_path(self.Config, "model_path"))
+        self.Config["w2vmodel"] = gensim.models.KeyedVectors.load_word2vec_format(
+            get_absolute_path(self.Config, "model_path"))
         de = datetime.datetime.now()
         print("Load W2V model (%s) in %s" % (get_absolute_path(self.Config, "model_path"), show_time(ds, de)))
 

@@ -18,10 +18,10 @@ class Preprocessor:
     def process(self, Config):
         lib_path = get_absolute_path(Config, "set_of_docs_lang_tokenization_lib_path")
         print("GRISHA use set_of_docs_lang_tokenization")
-        if len(lib_path) == 0 or not os.path.exists(lib_path):
+        if not lib_path or not os.path.exists(lib_path):
             raise ValueError("Wrong path to the tagger's jar. Tokenization can't be done")
         in_path = Config["home"] + "/" + Config["sourcepath"]
-        if len(Config["sourcepath"]) == 0 or Config["sourcepath"] == Config["targetpath"]:
+        if not Config["sourcepath"] or Config["sourcepath"] == Config["targetpath"]:
             raise ValueError("Wrong source/target path(s). Tokenization can't be done.")
         out_path = Config["home"] + "/" + Config["targetpath"]
         stop_words = ""

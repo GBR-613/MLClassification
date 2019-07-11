@@ -7,6 +7,7 @@ from keras.callbacks import ModelCheckpoint
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from Utils.utils import get_absolute_path
+from Utils.utils import correct_path
 from Models.metrics import metricsNames, printMetrics, printAveragedMetrics
 from Models.metrics import ModelMetrics
 from Models.dataPreparation import DataPreparation
@@ -45,14 +46,12 @@ class BaseModel:
         self.train_batch = int(Config["train_batch"])
 
     def isCorrectPath(self, Config):
-        if len(Config["binarizer_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "binarizer_path")):
-            if Config["type_of_execution"] == "test" or (len(Config["binarizer_path"]) != 0 and not os.path.isdir(
-                    os.path.dirname(get_absolute_path(Config, "binarizer_path")))):
+        if not correct_path(Config, "binarizer_path"):
+            if Config["type_of_execution"] == "test" or Config["binarizer_path"]:
                 print("Wrong path to binarizer. Stop.")
                 return False
-        if len(Config["vectorizer_path"]) == 0 or not os.path.isfile(get_absolute_path(Config, "vectorizer_path")):
-            if Config["type_of_execution"] == "test" or (len(Config["vectorizer_path"]) != 0 and not os.path.isdir(
-                    os.path.dirname(get_absolute_path(Config, "vectorizer_path")))):
+        if not correct_path(Config, "vectorizer_path"):
+            if Config["type_of_execution"] == "test" or Config["vectorizer_path"]:
                 print("Wrong path to vectorizer. Stop.")
                 return False
         return True
