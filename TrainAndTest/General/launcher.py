@@ -15,11 +15,11 @@ parser = ConfigParser()
 actions_list = []
 
 actions_def = {
-    "P":(Preprocessor,"preprocess"),
-    "W":(Embedding,"word_embedding"),
-    "D":(DataLoader,"data"),
-    "M":(ModelController,"model"),
-    "C":(Collector,"")
+    "P": (Preprocessor,"preprocess"),
+    "W": (Embedding,"word_embedding"),
+    "D": (DataLoader,"data"),
+    "M": (ModelController,"model"),
+    "C": (Collector,"")
 }
 
 

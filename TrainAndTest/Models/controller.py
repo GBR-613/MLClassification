@@ -81,7 +81,7 @@ class ModelController:
                 if not Config["infopath"] or not os.path.isdir(get_absolute_path(Config, "infopath")):
                     raise ValueError("Wrong path to folder containing model info.")
         """
-        if Config["type_of_execution"] != "train" and Config["customrank"] == "yes":
+        if Config["type_of_execution"] != "train" and Config["customrank"] == "True":
             try:
                 self.rank_threshold = float(Config["rank_threshold"])
             except ValueError:

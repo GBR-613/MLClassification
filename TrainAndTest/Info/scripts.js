@@ -199,7 +199,7 @@ function buildReqsPage() {
     tr.appendChild(ch);
     for (key in reqs) {
         ch = document.createElement("td");
-        ch.innerHTML = fullData[key]["preprocess"]["stopwords"];
+        ch.innerHTML = fullData[key]["preprocess"]["stop_words"];
         tr.appendChild(ch);
     }
     tr = document.createElement("tr");
@@ -221,7 +221,7 @@ function buildReqsPage() {
     tr.appendChild(ch);
     for (key in reqs) {
         ch = document.createElement("td");
-        ch.innerHTML = fullData[key]["preprocess"]["extrawords"] || "none";
+        ch.innerHTML = fullData[key]["preprocess"]["extra_words"] || "none";
         tr.appendChild(ch);
     }
     tr = document.createElement("tr");

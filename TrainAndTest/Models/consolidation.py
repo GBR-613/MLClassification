@@ -15,7 +15,7 @@ class Collector:
             print ("Documents have not been classified in this process chain.")
             print ("Consolidation can't be performed.")
             self.rank_threshold = 0.5
-            if Config['consolidatedrank'] == "yes":
+            if Config['consolidatedrank'] == "True":
                 try:
                     self.rank_threshold = float(Config["consolidated_rank_threshold"])
                 except ValueError:
@@ -89,8 +89,8 @@ class Collector:
         report.sourcesPath = self.Config["actualpath"]
         report.datasetPath = self.Config["test_data_path"]
 
-        tokOpts = ["language_tokenization", "normalization", "stopwords",
-                   "exclude_positions", "extrawords", "exclude_categories"]
+        tokOpts = ["language_tokenization", "normalization", "stop_words",
+                   "exclude_positions", "extra_words", "exclude_categories"]
         for i in range(len(tokOpts)):
             report.preprocess[tokOpts[i]] = self.Config[tokOpts[i]]
         for i in range(len(self.Config["test_docs"])):
@@ -131,7 +131,7 @@ class Collector:
         file.close()
 
     def prepare_resources_for_runtime(self):
-        tokOpts = ["language_tokenization", "normalization", "stopwords", "exclude_positions", "extrawords",
+        tokOpts = ["language_tokenization", "normalization", "stop_words", "exclude_positions", "extra_words",
                    "max_seq_len", "max_chars_seq_len", "single_doc_lang_tokenization_lib_path"]
         self.Config["resources"]["tokenization"] = {}
         ds = datetime.datetime.now()

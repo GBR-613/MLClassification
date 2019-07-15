@@ -19,7 +19,7 @@ class TokensFromServer:
     def __init__(self, Config):
         self.Config = Config
         self.curdir = os.getcwd()
-        if Config["servstop"] == "yes":
+        if Config["servstop"] == "True":
             self.stopServer()
         self.startProcess = True
         self.startServer()
@@ -56,8 +56,8 @@ class TokensFromServer:
 
     def tokenize(self):
         parser = CoreNLPParser(url='http://localhost:' + self.Config["servport"], tagtype='pos')
-        inPath = self.Config["home"] + "/" + self.Config["sourcepath"]
-        outPath = self.Config["home"] + "/" + self.Config["targetpath"]
+        inPath = self.Config["home"] + "/" + self.Config["source_path"]
+        outPath = self.Config["home"] + "/" + self.Config["target_path"]
 
         fds = datetime.datetime.now()
         self.tokenizeData(parser, inPath, outPath)

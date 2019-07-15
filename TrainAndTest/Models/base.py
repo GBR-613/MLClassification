@@ -37,7 +37,7 @@ class BaseModel:
         self.cross_validations_total = int(Config["cross_validations_total"])
         if self.verbose != 0:
             self.verbose = 1
-        if Config["customrank"] == "yes":
+        if Config["customrank"] == "True":
             self.rank_threshold = float(Config["rank_threshold"])
         else:
             self.rank_threshold = 0.5

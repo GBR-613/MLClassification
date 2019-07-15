@@ -4,33 +4,27 @@ import datetime
 from subprocess import Popen, PIPE
 from nltk.corpus import stopwords
 from Utils.utils import show_time
-from Utils.utils import get_absolute_path
+from Utils.utils import get_absolute_path, test_path
 
 class TokensFromTagger:
     def __init__(self, Config):
-        self.Config = Config
-        self.tokenize(Config)
-
-    def tokenize(self, Config):
-        taggerPath = get_absolute_path(Config, "taggerpath")
-        if not taggerPath or not os.path.exists(taggerPath):
-            print ("Wrong path to the tagger's jar. Tokenization can't be done")
-            Config["error"] = True
-            return
-        inPath = Config["home"] + "/" + Config["sourcepath"]
-        outPath = Config["home"] + "/" + Config["targetpath"]
-        stopWords = ""
-        if Config["stopwords"] == "yes":
+        test_path(Config, "set_of_docs_lang_tokenization_lib_path",
+                  "Wrong path to the tagger's jar. Tokenization can't be done")
+        tagger_path = get_absolute_path(Config, "set_of_docs_lang_tokenization_lib_path")
+        inPath = Config["home"] + "/" + Config["source_path"]
+        outPath = Config["home"] + "/" + Config["target_path"]
+        stop_words = ""
+        if Config["stop_words"] == "True":
             sWords = list(stopwords.words('arabic'))
             for i in range(len(sWords)):
                 if i > 0:
-                    stopWords += ","
-                stopWords += sWords[i]
+                    stop_words += ","
+                stop_words += sWords[i]
         ds = datetime.datetime.now()
-        srv = subprocess.Popen('java -Xmx2g -jar ' + taggerPath + ' "' + inPath +  '" "'  +
-                               outPath + '" "' + Config["expos"] + '" "'+ stopWords + '" "' +
-                               Config["extrawords"] + '" "' + Config["normalization"] + '" "' +
-                               Config["actualTocs"] + '"',
+        srv = subprocess.Popen('java -Xmx2g -jar ' + tagger_path + ' "' + inPath + '" "' +
+                               outPath + '" "' + Config["exclude_positions"] + '" "'+ stop_words + '" "' +
+                               Config["extra_words"] + '" "' + Config["normalization"] + '" "' +
+                               Config["language_tokenization"] + '"',
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         srv.wait()
         reply = srv.communicate()

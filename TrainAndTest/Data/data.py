@@ -54,10 +54,10 @@ class DataLoader:
                                                 stderr=subprocess.PIPE, shell=True, encoding="utf-8")
                 else:
                     self.nlp_tokenizer = stanfordnlp.Pipeline(lang="ar", processors='tokenize,mwt', use_gpu=True)
-            if self.Config["stopwords"] == "True":
-                self.stopWords = set(nltk.corpus.stopwords.words('arabic'))
+            if self.Config["stop_words"] == "True":
+                self.stop_words = set(nltk.corpus.stopwords.words('arabic'))
             else:
-                self.stopWords = set()
+                self.stop_words = set()
             if self.Config["normalization"] == "True":
                 self.normalizer = ArabicNormalizer()
         if Config["load_w2v_model"] == "True":
@@ -286,8 +286,8 @@ class DataLoader:
                 self.jar.stdin.write(text + '\n')
                 self.jar.stdin.flush()
                 text = self.jar.stdout.readline().strip()
-                words = [w for w in text.strip().split() if w not in self.stopWords]
-                words = [w for w in words if w not in self.Config["extrawords"]]
+                words = [w for w in text.strip().split() if w not in self.stop_words]
+                words = [w for w in words if w not in self.Config["extra_words"]]
             else:
                 doc = self.nlp_tokenizer(text)
                 words = []
@@ -295,7 +295,7 @@ class DataLoader:
                     for token in sentence.tokens:
                         for word in token.words:
                             new_word = word.text
-                            if new_word not in self.stopWords and new_word not in self.Config["extrawords"]:
+                            if new_word not in self.stop_words and new_word not in self.Config["extra_words"]:
                                 words.append(new_word)
 
             if self.Config["normalization"] == "True":

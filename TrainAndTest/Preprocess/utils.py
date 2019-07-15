@@ -8,17 +8,17 @@ def joinTokens(tArr, Config):
     tags = [x[1] for x in tArr]
     result = ''
     normalizer = ArabicNormalizer()
-    if Config["stopwords"]:
-        stopWords = set(stopwords.words('arabic'))
+    if Config["stop_words"]:
+        stop_words = set(stopwords.words('arabic'))
     else:
-        stopWords = set()
+        stop_words = set()
     exclude_positions = Config["exclude_positions"].split(",")
-    exWords = Config["extrawords"].split(",")
+    exWords = Config["extra_words"].split(",")
     for i in range(len(tArr)):
         ftok = ''
         if i > 0:
             result += ' '
-        if tags[i] in exclude_positions or tags[i] in stopWords or tags[i] in exWords:
+        if tags[i] in exclude_positions or tags[i] in stop_words or tags[i] in exWords:
             continue
         else:
             ftok = toks[i]

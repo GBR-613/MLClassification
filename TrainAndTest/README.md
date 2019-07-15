@@ -56,15 +56,15 @@ same, as target file (or folder) for _Preprocess_.
 
 Name | Possible values | Comments
 --- | --- | ---
-actualTocs | *True*/False | 'True' defines langiage-specific tokenization, False - simple white space tokenization
-sourcePath | <path> | Relative path to the folder or file, containing source data.
-targetPath | <path> | Relative path to the folder or file, which will contain results of tokenization
+language_tokenization | *True*/False | 'True' defines langiage-specific tokenization, False - simple white space tokenization
+source_path | <path> | Relative path to the folder or file, containing source data.
+target_path | <path> | Relative path to the folder or file, which will contain results of tokenization
 set_of_docs_lang_tokenization_lib_path | <path> | Relative path to jar with tagger, which performs all preprocessing
 single_doc_lang_tokenization_lib_path | <path> | Relative path to jar with tagger, which performs tokenization only (used by DataLoader and in runtime)
 exclude_positions | PUNC,DT,IN,CD,PRP,RP,RB,W,PDT | List of POS's, which should be excluded from results of tokenization.
 normalization | True/False | Defines the need in text normalization
-stopWords | True/False | Defines the need to exclude stop words from results of tokenization.
-extraWords | <list> / empty | List of extra words, which should be excluded from results of tokenization.
+stop_words | True/False | Defines the need to exclude stop words from results of tokenization.
+extra_words | <list> / empty | List of extra words, which should be excluded from results of tokenization.
 
 _Note: 'list' can be empty, but if it contains few items, they should be separated by comma without spaces._
 

@@ -2,15 +2,16 @@ from Tokenization.server import TokensFromServer
 from Tokenization.tagger import TokensFromTagger
 from Utils.utils import updateParams
 
+
 class Tokenizer:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Tokenization ===")
         updateParams(Config, DefConfig, kwargs)
         self.Config = Config
         self.DefConfig = DefConfig
-        #if Config["actualtoks"] != "yes":
+        #if Config["language_tokenization"] != "True":
         #    return
-        if not Config["sourcepath"] or Config["sourcepath"] == Config["targetpath"]:
+        if not Config["source_path"] or Config["source_path"] == Config["target_path"]:
             print ("Wrong source/target path(s). Tokenization can't be done.")
             Config["error"] = True
             return
