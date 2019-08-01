@@ -162,9 +162,15 @@ class BaseModel:
 
     def testSKLModel(self):
         print ("Start testing...")
-        print("Model doesn't calculate probabilities.")
+        if self.useProbabilities:
+            print ("Rank threshold: %.2f" % self.rank_threshold)
+        else:
+            print("Model doesn't calculate probabilities.")
         ds = datetime.datetime.now()
-        self.predictions = self.model.predict(self.testArrays)
+        if not self.useProbabilities:
+            self.predictions = self.model.predict(self.testArrays)
+        else:
+            self.predictions = self.model.predict(self.testArrays)
         de = datetime.datetime.now()
         print("Test dataset containing %d documents predicted in %s" % (self.testArrays.shape[0], show_time(ds, de)))
         if self.isCV:
@@ -179,7 +185,6 @@ class BaseModel:
         if self.Config["show_test_results"] == "True":
             printMetrics(self)
 
-
     def saveResults(self):
         self.Config["results"][self.Config["name"]] = self.predictions
         self.Config["metrics"][self.Config["name"]] = self.metrics
@@ -191,6 +196,10 @@ class BaseModel:
     def prepare_resources_for_runtime(self, type):
         self.resources["created_model_path"] = get_absolute_path(self.Config, "created_model_path", opt="name")
         self.resources["modelType"] = type
+        if self.useProbabilities:
+            self.resources["rank_threshold"] = self.rank_threshold
+        else:
+            self.resources["rank_threshold"] = 1.0
         self.saveAdditions()
         if type == "skl":
             self.resources["handleType"] = "vectorize"

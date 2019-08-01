@@ -5,12 +5,13 @@ from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Utils.utils import get_absolute_path
 
+
 class SGDModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
         if not self.isCorrectPath(Config):
             raise Exception
-        self.useProbabilities = False
+        self.useProbabilities = True
         self.handleType = "vectorize"
         if Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
@@ -23,7 +24,7 @@ class SGDModel(BaseModel):
 
     def createModel(self):
         return OneVsRestClassifier(SGDClassifier(loss='modified_huber', penalty='elasticnet',
-                                                 alpha=1e-4, max_iter=10, n_jobs=-1))
+                                                 alpha=1e-4, max_iter=10, tol=1e-3, n_jobs=-1))
 
     def loadModel(self):
         self.model = self.loadSKLModel()
