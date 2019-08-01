@@ -6,6 +6,7 @@ from gensim.models.word2vec import Word2Vec
 from gensim.models.callbacks import CallbackAny2Vec
 from Utils.utils import get_absolute_path, show_time, updateParams, test_path
 
+
 class Embedding:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Word Embedding ===")

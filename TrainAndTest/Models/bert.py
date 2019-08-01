@@ -16,6 +16,7 @@ from Data.data import compose_tsv
 from Models.metrics import printAveragedMetrics
 from Utils.utils import get_absolute_path, show_time, test_path
 
+
 class BertModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
@@ -298,7 +299,5 @@ class BertModel(BaseModel):
         print ("Cross-validation is done in %s"%(show_time(ds, de)))
         printAveragedMetrics(arrMetrics, self.Config)
         print ("The best result is %f"%(f1))
-        print ("Corresponding data sets are saved in the folder %s"%(
-            get_absolute_path(self.Config, "cross_validations_datasets_path")))
-
-
+        print ("Corresponding data sets are saved in the folder %s" %
+                                    get_absolute_path(self.Config, "cross_validations_datasets_path"))

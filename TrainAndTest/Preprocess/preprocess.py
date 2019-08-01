@@ -25,12 +25,7 @@ class Preprocessor:
             raise ValueError("Wrong source/target path(s). Tokenization can't be done.")
         out_path = Config["home"] + "/" + Config["target_path"]
         stop_words = ""
-        if Config["stop_words"] == "True":
-            sWords = list(stopwords.words('arabic'))
-            for i in range(len(sWords)):
-                if i > 0:
-                    stop_words += ","
-                stop_words += sWords[i]
+        stop_words = ",".join(list(stopwords.words('arabic'))) if Config["stop_words"] == "True" else ""
         ds = datetime.datetime.now()
         srv = subprocess.Popen('java -Xmx2g -jar ' + lib_path + ' "' + in_path + '" "' +
                                out_path + '" "' + Config["exclude_positions"] + '" "'+ stop_words + '" "' +

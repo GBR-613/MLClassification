@@ -27,6 +27,7 @@ metricsNames = {
     "microF1": "Micro-Averaged F1-Measure"
 }
 
+
 class ModelMetrics:
     def __init__(self, model):
         self.model = model
@@ -236,15 +237,14 @@ def printMetrics(model):
             print(f"    {align_to_left(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
     sortedDict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
     print("\n  F1-Measure by category in descend order:")
-    for i in range(len(sortedDict)):
-        if sortedDict[i][0] != "all":
-            print(f"    {align_to_left(sortedDict[i][0], 35)}\u200e   {'%.2f%%' % (sortedDict[i][1]['f1'] * 100)}")
+    for d in sortedDict:
+        if d[0] != "all":
+            print(f"    {align_to_left(d[0], 35)}\u200e   {'%.2f%%' % (d[1]['f1'] * 100)}")
 
 def printAveragedMetrics(arrMetrics, Config):
     print("Averaged metrics:")
     model = SimpleModel(Config)
-    for i in range(len(arrMetrics)):
-        itMetrics = arrMetrics[i]
+    for itMetrics in arrMetrics:
         for key1, val1 in itMetrics.items():
             for key2, val2 in val1.items():
                 if not key2.startswith("d"):
@@ -260,9 +260,9 @@ def printAveragedMetrics(arrMetrics, Config):
             print(f"    {align_to_left(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
     sortedDict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
     print("\n  Averaged F1-Measure by category in descend order:")
-    for i in range(len(sortedDict)):
-        if sortedDict[i][0] != "all":
-            print(f"    {align_to_left(sortedDict[i][0], 35)}\u200e   {'%.2f%%' % (sortedDict[i][1]['f1'] * 100)}")
+    for d in sortedDict:
+        if d[0] != "all":
+            print(f"    {align_to_left(d[0], 35)}\u200e   {'%.2f%%' % (d[1]['f1'] * 100)}")
 
 class SimpleModel:
     def __init__(self, Config):

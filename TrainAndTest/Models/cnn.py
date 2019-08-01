@@ -14,6 +14,7 @@ from Utils.utils import arabic_charset, get_absolute_path, show_time
 from keras import backend as K
 import tensorflow as tf
 
+
 class CNNModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
@@ -70,7 +71,6 @@ class CNNModel(BaseModel):
         session = tf.Session(config=cf)
         K.set_session(session)
         """
-
         self.trainNNModel()
 
     def testModel(self):

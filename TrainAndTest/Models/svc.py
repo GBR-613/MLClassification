@@ -38,5 +38,3 @@ class SVCModel(BaseModel):
         if not "vectorizer" in self.Config["resources"]:
             self.Config["resources"]["vectorizer"] = get_absolute_path(self.Config, "vectorizer_path")
         self.resources["vectorizer"] = "True"
-
-

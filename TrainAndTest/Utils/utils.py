@@ -49,12 +49,9 @@ def get_absolute_path(Config, relPath, opt=""):
 
 def get_configuration(parser, section):
     DefConfig = {}
-    try:
-        options = parser.items(section)
-        for i in range(len(options)):
-            DefConfig[options[i][0]] = options[i][1]
-    except Exception:
-        pass
+    for item in parser.items(section):
+        if item[1]:
+            DefConfig[item[0]] = item[1]
     return DefConfig
 
 

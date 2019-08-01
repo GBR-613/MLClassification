@@ -10,6 +10,7 @@ from Models.dataPreparation import DataPreparation
 from Models.metrics import ModelMetrics
 from Utils.utils import get_absolute_path, show_time, test_path
 
+
 class SnnModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)

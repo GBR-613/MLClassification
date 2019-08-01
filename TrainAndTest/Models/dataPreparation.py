@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
 from Utils.utils import show_time, get_absolute_path, arabic_charset
 
+
 class DataPreparation:
     def __init__(self, model, addValSet):
         self.model = model
@@ -112,8 +113,8 @@ class DataPreparation:
         if self.model.Config["type_of_execution"] != "test":
             tokenizer = Tokenizer(num_words=self.maxWords)
             trainTexts = []
-            for i in range(len(self.model.Config[self.keyTrain])):
-                trainTexts.append(self.model.Config[self.keyTrain][i].lines)
+            for t in self.model.Config[self.keyTrain]:
+                trainTexts.append(t.lines)
             tokenizer.fit_on_texts(trainTexts)
             if not self.model.isCV:
                 with open(get_absolute_path(self.model.Config, "indexer_path"), 'wb') as handle:
@@ -138,8 +139,8 @@ class DataPreparation:
                 tokenizer = pickle.load(handle)
             handle.close()
         testTexts = []
-        for i in range(len(self.model.Config[self.keyTest])):
-            testTexts.append(self.model.Config[self.keyTest][i].lines)
+        for t in self.model.Config[self.keyTest]:
+            testTexts.append(t.lines)
         self.model.testArrays = pad_sequences(tokenizer.texts_to_sequences(testTexts),
                                               maxlen=self.model.Config["max_seq_len"])
         self.model.testLabels = numpy.concatenate([numpy.array(x.labels).
@@ -212,9 +213,8 @@ class DataPreparation:
         ds = datetime.datetime.now()
         if self.model.Config["type_of_execution"] != "test":
             nmCats = [""] * len(self.model.Config["predefined_categories"])
-            cKeys = list(self.model.Config["predefined_categories"].keys())
-            for i in range(len(cKeys)):
-                nmCats[self.model.Config["predefined_categories"][cKeys[i]]] = cKeys[i]
+            for k in list(self.model.Config["predefined_categories"].keys()):
+                nmCats[self.model.Config["predefined_categories"][k]] = k
             mlb = MultiLabelBinarizer(classes=nmCats)
             wev = (TfidfVectorizer(ngram_range=(1, 3), max_df=0.50)
                    .fit([x.lines for x in self.model.Config[self.keyTrain]],
@@ -228,7 +228,7 @@ class DataPreparation:
                 with open(get_absolute_path(self.model.Config, "vectorizer_path"), 'wb') as handle:
                     pickle.dump(wev, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 handle.close()
-        if mlb == None:
+        if not mlb:
             with open(get_absolute_path(self.model.Config, "binarizer_path"), 'rb') as handle:
                 mlb = pickle.load(handle)
             handle.close()

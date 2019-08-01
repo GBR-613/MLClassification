@@ -19,6 +19,7 @@ userInfo = {
     "crossvalidation": "cross-validation",
     "none": "set parameters only"}
 
+
 class ModelController:
     def __init__(self, Config, DefConfig, kwargs):
         Config["modelid"] += 1

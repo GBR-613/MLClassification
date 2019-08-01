@@ -13,6 +13,7 @@ from Models.metrics import ModelMetrics
 from Models.dataPreparation import DataPreparation
 from Utils.utils import align_to_left, show_time
 
+
 class BaseModel:
     def __init__(self, Config):
         self.Config = Config
@@ -256,25 +257,23 @@ class BaseModel:
         test_data_path = root + "/test"
         folds = {}
         os.mkdir(train_data_path)
-        for i in range(len(self.Config["cross_validations_train_docs"])):
-            doc = self.Config["cross_validations_train_docs"][i]
-            for j in range(len(doc.nlabs)):
-                foldPath = train_data_path + "/" + doc.nlabs[j]
-                if doc.nlabs[j] not in folds:
+        for doc in self.Config["cross_validations_train_docs"]:
+            for nlab in doc.nlabs:
+                foldPath = train_data_path + "/" + nlab
+                if nlab not in folds:
                     os.mkdir(foldPath)
-                    folds[doc.nlabs[j]] = True
+                    folds[nlab] = True
                 with open(foldPath + '/' + doc.name, 'w', encoding="utf-8") as file:
                     file.write(doc.lines)
                 file.close()
         folds = {}
         os.mkdir(test_data_path)
-        for i in range(len(self.Config["cross_validations_test_docs"])):
-            doc = self.Config["cross_validations_test_docs"][i]
-            for j in range(len(doc.nlabs)):
-                foldPath = test_data_path + "/" + doc.nlabs[j]
-                if doc.nlabs[j] not in folds:
+        for doc in self.Config["cross_validations_test_docs"]:
+            for nlab in doc.nlabs:
+                foldPath = test_data_path + "/" + nlab
+                if nlab not in folds:
                     os.mkdir(foldPath)
-                    folds[doc.nlabs[j]] = True
+                    folds[nlab] = True
                 with open(foldPath + '/' + doc.name, 'w', encoding="utf-8") as file:
                     file.write(doc.lines)
                 file.close()

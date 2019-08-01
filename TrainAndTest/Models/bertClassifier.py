@@ -7,12 +7,14 @@ from pytorch_pretrained_bert.modeling import BertModel
 from pytorch_pretrained_bert.modeling import PreTrainedBertModel
 from torch.nn import BCEWithLogitsLoss
 
+
 def getLogger():
     logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
                     datefmt = '%m/%d/%Y %H:%M:%S',
                     level = logging.INFO)
     logger = logging.getLogger(__name__)
     return logger
+
 
 class BertForMultiLabelSequenceClassification(PreTrainedBertModel):
     """
@@ -170,9 +172,8 @@ def convert_examples_to_features(examples, label_list, max_seq_length, tokenizer
         assert len(segment_ids) == max_seq_length
 
         label_id = [0] * len(label_list)
-        exLabels = example.label.split(",")
-        for i in range(len(exLabels)):
-            label_id[label_map[exLabels[i]]] = 1
+        for l in example.label.split(","):
+            label_id[label_map[l]] = 1
 
         features.append(
             InputFeatures(input_ids=input_ids,

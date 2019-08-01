@@ -6,6 +6,7 @@ from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Utils.utils import get_absolute_path
 
+
 class PerceptronModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
@@ -39,5 +40,3 @@ class PerceptronModel(BaseModel):
         if not "vectorizer" in self.Config["resources"]:
             self.Config["resources"]["vectorizer"] = get_absolute_path(self.Config, "vectorizer_path")
         self.resources["vectorizer"] = "True"
-
-

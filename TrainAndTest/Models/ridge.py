@@ -5,6 +5,7 @@ from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Utils.utils import get_absolute_path
 
+
 class RidgeModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)

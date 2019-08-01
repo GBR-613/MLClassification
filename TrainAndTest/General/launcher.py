@@ -25,11 +25,9 @@ actions_def = {
 
 def parse_config(path):
     parser.read_file(open(path))
-    sections = parser.sections()
-    for i in range(len(sections)):
-        options = parser.items(sections[i])
-        for j in range(len(options)):
-            Config[options[j][0]] = options[j][1]
+    for s in parser.sections():
+        for opt in parser.items(s):
+            Config[opt[0]] = opt[1]
     if not Config["home"]:
         Config["home"] = str(Path.home())
     Config["reqid"] = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -64,7 +62,7 @@ def parse_request(req):
             for j in range(len(options)):
                 kvs = options[j].split("=")
                 if kvs[0].lower() not in Config:
-                    raise ValueError("Wrong parameter ('%s') of task name '%s'. Stop."%(kvs[0], task_name))
+                    raise ValueError("Wrong parameter ('%s') of task name '%s'. Stop." % kvs[0], task_name)
                 for k in range(len(kvs)):
                     kwargs[kvs[0].lower()] = kvs[1]
         actions_list.append((task_name, kwargs))
@@ -86,11 +84,9 @@ def work():
 
 def parse_config_info(path):
     parser.read_file(open(path))
-    sections = parser.sections()
-    for i in range(len(sections)):
-        options = parser.items(sections[i])
-        for j in range(len(options)):
-            Config[options[j][0]] = options[j][1]
+    for s in parser.sections():
+        for opt in parser.items(s):
+            Config[opt[0]] = opt[1]
     if not Config["home"]:
         Config["home"] = str(Path.home())
     if not Config["infofrom"]:

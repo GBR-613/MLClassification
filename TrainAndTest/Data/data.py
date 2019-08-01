@@ -163,8 +163,8 @@ class DataLoader:
         for i in range(100, maxLen, 100):
             input_length_list.append(i)
         input_length_dict = {x: 0 for x in input_length_list}
-        for i in range(len(self.Config["train_docs"])):
-            curLen = len(self.Config["train_docs"][i].words)
+        for t in self.Config["train_docs"]:
+            curLen = len(t.words)
             dicLen = maxLen
             for ln in input_length_dict:
                 if curLen < ln:
@@ -192,8 +192,8 @@ class DataLoader:
         for i in range(100, maxLen, 100):
             input_length_list.append(i)
         input_length_dict = {x: 0 for x in input_length_list}
-        for i in range(len(self.Config["train_docs"])):
-            curLen = len(self.Config["train_docs"][i].lines)
+        for t in self.Config["train_docs"]:
+            curLen = len(t.lines)
             dicLen = maxLen
             for ln in input_length_dict:
                 if curLen < ln:
@@ -252,23 +252,23 @@ class DataLoader:
         labels = [x[2] for x in self.Config["train_docs"]]
         results = [labels[0]]
         qLabs = 0
-        for i in range(len(labels)):
-            qLabs += sum(labels[i])
+        for label in labels:
+            qLabs += sum(label)
             count = 0
-            for j in range(len(results)):
+            for res in results:
                 for k in range(len(self.Config["predefined_categories"])):
-                    if labels[i][k] != results[j][k]:
+                    if label[k] != res[k]:
                         count += 1
                         break
             if count == len(results):
-                results.append(labels[i])
+                results.append(label)
         return len(results), qLabs
 
     def files_by_category(self, docs, cats):
         fInCats = [0] * len(cats)
-        for i in range(len(docs)):
+        for doc in docs:
             for j in range(len(cats)):
-                if docs[i].labels[j] == 1:
+                if doc.labels[j] == 1:
                     fInCats[j] += 1
         return fInCats
 

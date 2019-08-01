@@ -1,14 +1,15 @@
 import numpy
 import matplotlib.pyplot as plt
 
+
 def showDocsByLength(Config):
     train_docs = Config["train_docs"]
     test_docs = Config["test_docs"]
     fig, (plot1, plot2) = plt.subplots(1, 2, figsize=(10 ,6))
     dictLens = dict()
     dictLens1 = dict()
-    for i in range(len(train_docs)):
-        lend = "%5d " %(len(train_docs[i].words))
+    for doc in train_docs:
+        lend = "%5d " %(len(doc.words))
         if not lend in dictLens:
             dictLens[lend] = 1
         else:
@@ -20,8 +21,8 @@ def showDocsByLength(Config):
     plot1.set_ylabel("Documents")
     plot1.set_xlabel("Tokens")
     plot1.plot(lvars, locc, "b.-")
-    for i in range(len(test_docs)):
-        lend = "%5d " %(len(test_docs[i].words))
+    for doc in test_docs:
+        lend = "%5d " %(len(doc.words))
         if not lend in dictLens1:
             dictLens1[lend] = 1
         else:
@@ -43,8 +44,8 @@ def showDocsByLabs(Config):
     fig, (plot1, plot2) = plt.subplots(1, 2, figsize=(10 ,6))
     dictLabs = dict()
     dictLabs1 = dict()
-    for i in range(len(train_docs)):
-        lab = "%5d " %(train_docs[i].qLabs[0])
+    for doc in train_docs:
+        lab = "%5d " % doc.qLabs[0]
         if not lab in dictLabs:
             dictLabs[lab] = 1
         else:
@@ -57,8 +58,8 @@ def showDocsByLabs(Config):
     plot1.set_xlabel("Labels")
     plot1.set_xticks(numpy.arange(0, len(categories), step=1))
     plot1.plot(lvars1, locc1, "bo-")
-    for i in range(len(test_docs)):
-        lab = "%5d " %(test_docs[i].qLabs[0])
+    for doc in test_docs:
+        lab = "%5d " %(doc.qLabs[0])
         if not lab in dictLabs1:
             dictLabs1[lab] = 1
         else:

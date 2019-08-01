@@ -6,6 +6,7 @@ import webbrowser
 from datetime import date, timedelta
 from Utils.utils import get_absolute_path
 
+
 class InfoCreator:
     def __init__(self, Config):
         print ("Start to create info...")
@@ -33,10 +34,10 @@ class InfoCreator:
                 try:
                     self.info[key] = json.load(json_file)
                 except json.JSONDecodeError:
-                    print ("Warning: file %s doesn't have json format. Skipped."%(resPath))
+                    print ("Warning: file %s doesn't have json format. Skipped." % resPath)
             json_file.close()
         if not self.info:
-            print ("Folder %s doesn't contain reports, created in required diapason of dates. Exit."%(self.path))
+            print ("Folder %s doesn't contain reports, created in required diapason of dates. Exit." % self.path)
             return
         self.html = ""
         self.qReqs = 0
@@ -97,9 +98,8 @@ class InfoCreator:
         pages = ["Requests", "Models", "Categories", "Documents"]
         mainHtml = "<div style='width:100%; height: 100%; min-height: 100%;'>"
         mainHtml += "<ul class='menu' style='border-bottom: 2px solid black;'>"
-        for i in range(len(pages)):
-            mainHtml += "<li class='menu' id='%s' onclick='changePage(\"%s\")'>%s</li>"%(
-                                                                        "page" + pages[i], pages[i], pages[i])
+        for p in pages:
+            mainHtml += "<li class='menu' id='%s' onclick='changePage(\"%s\")'>%s</li>" % "page" + p, p, p
         mainHtml += "</ul><div id='mainPage' style='height:100%; min-height:100%; width: 100%; overflow: auto;'>"
         mainHtml += "</div>"
         return mainHtml

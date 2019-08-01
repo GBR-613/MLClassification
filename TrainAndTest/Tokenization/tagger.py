@@ -13,13 +13,7 @@ class TokensFromTagger:
         tagger_path = get_absolute_path(Config, "set_of_docs_lang_tokenization_lib_path")
         inPath = Config["home"] + "/" + Config["source_path"]
         outPath = Config["home"] + "/" + Config["target_path"]
-        stop_words = ""
-        if Config["stop_words"] == "True":
-            sWords = list(stopwords.words('arabic'))
-            for i in range(len(sWords)):
-                if i > 0:
-                    stop_words += ","
-                stop_words += sWords[i]
+        stop_words = ",".join(list(stopwords.words('arabic'))) if Config["stop_words"] == "True" else ""
         ds = datetime.datetime.now()
         srv = subprocess.Popen('java -Xmx2g -jar ' + tagger_path + ' "' + inPath + '" "' +
                                outPath + '" "' + Config["exclude_positions"] + '" "'+ stop_words + '" "' +

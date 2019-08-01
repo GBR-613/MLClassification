@@ -69,13 +69,13 @@ class Collector:
                     #elif res[i][j] >= self.rank_threshold:
                     elif res[i][j] >= self.Config["ranks"][key]:
                         self.predictions[i][j] += 1
-        qModels = len(self.Config["results"])
-        for i in range(len(self.predictions)):
-            for j in range(len(self.predictions[i])):
-                if self.predictions[i][j] >= qModels * self.rank_threshold:
-                    self.predictions[i][j] = 1
+        q_models = len(self.Config["results"])
+        for p1 in self.predictions:
+            for p in p1:
+                if p >= q_models * self.rank_threshold:
+                    p = 1
                 else:
-                    self.predictions[i][j] = 0
+                    p = 0
 
     def getMetrics(self):
         ModelMetrics(self)
@@ -89,13 +89,13 @@ class Collector:
         report.sourcesPath = self.Config["actualpath"]
         report.datasetPath = self.Config["test_data_path"]
 
-        tokOpts = ["language_tokenization", "normalization", "stop_words",
-                   "exclude_positions", "extra_words", "exclude_categories"]
-        for i in range(len(tokOpts)):
-            report.preprocess[tokOpts[i]] = self.Config[tokOpts[i]]
-        for i in range(len(self.Config["test_docs"])):
-            report.docs[self.Config["test_docs"][i].name] = {}
-            report.docs[self.Config["test_docs"][i].name]["actual"] = ",".join(self.Config["test_docs"][i].nlabs)
+        tokenization_options = ["language_tokenization", "normalization", "stop_words", "exclude_positions",
+                                "extra_words", "exclude_categories"]
+        for t in tokenization_options:
+            report.preprocess[t] = self.Config[t]
+        for t in self.Config["test_docs"]:
+            report.docs[t.name] = {}
+            report.docs[t.name]["actual"] = ",".join(t.nlabs)
         if not self.Config["exclude_categories"]:
             exclude_categories = []
         else:
@@ -131,14 +131,14 @@ class Collector:
         file.close()
 
     def prepare_resources_for_runtime(self):
-        tokOpts = ["language_tokenization", "normalization", "stop_words", "exclude_positions", "extra_words",
-                   "max_seq_len", "max_chars_seq_len", "single_doc_lang_tokenization_lib_path"]
+        tokenization_options = ["language_tokenization", "normalization", "stop_words", "exclude_positions",
+                        "extra_words", "max_seq_len", "max_chars_seq_len", "single_doc_lang_tokenization_lib_path"]
         self.Config["resources"]["tokenization"] = {}
         ds = datetime.datetime.now()
         self.outDir = get_absolute_path(self.Config, "saved_resources_path") + "/"
-        for i in range(len(tokOpts)):
-            if tokOpts[i] != "single_doc_lang_tokenization_lib_path":
-                self.Config["resources"]["tokenization"][tokOpts[i]] = self.Config[tokOpts[i]]
+        for t in tokenization_options:
+            if t != "single_doc_lang_tokenization_lib_path":
+                self.Config["resources"]["tokenization"][t] = self.Config[t]
             elif self.Config["language_tokenization"] == "True":
                 self.Config["resources"]["tokenization"]["single_doc_lang_tokenization_lib_path"] = \
                     self.copyFile(get_absolute_path(self.Config, "single_doc_lang_tokenization_lib_path"))
