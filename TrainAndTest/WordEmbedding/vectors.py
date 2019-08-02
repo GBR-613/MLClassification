@@ -74,6 +74,7 @@ class Embedding:
         de = datetime.datetime.now()
         print("W2V model %s is saved in the text format in %s\n" % (finalPath, get_formatted_date(ds, de)))
 
+
 class EpochLogger(CallbackAny2Vec):
     def __init__(self, epochs):
         self.epoch = 1

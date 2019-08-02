@@ -57,7 +57,7 @@ class BaseModel:
     def launch_process(self):
         if self.Config["type_of_execution"] == "crossvalidation":
             self.isCV = True
-            self.launchCrossValidation()
+            self.launch_crossvalidation()
         elif self.Config["type_of_execution"] != "test":
             self.model = self.create_model()
             self.train_model()
@@ -156,7 +156,7 @@ class BaseModel:
             return
         self.prepare_resources_for_runtime("keras")
         self.get_metrics()
-        self.saveResults()
+        self.save_results()
 
     def testSKLModel(self):
         print ("Start testing...")
@@ -176,7 +176,7 @@ class BaseModel:
             return
         self.prepare_resources_for_runtime("skl")
         self.get_metrics()
-        self.saveResults()
+        self.save_results()
 
     def get_metrics(self):
         print ("Calculate metrics...")
@@ -184,7 +184,7 @@ class BaseModel:
         if self.Config["show_test_results"] == "True":
             print_metrics(self)
 
-    def saveResults(self):
+    def save_results(self):
         self.Config["results"][self.Config["name"]] = self.predictions
         self.Config["metrics"][self.Config["name"]] = self.metrics
         if self.useProbabilities:
@@ -199,15 +199,15 @@ class BaseModel:
             self.resources["rank_threshold"] = self.rank_threshold
         else:
             self.resources["rank_threshold"] = 1.0
-        self.saveAdditions()
+        self.save_additions()
         if type == "skl":
             self.resources["handleType"] = "vectorize"
         self.Config["resources"]["models"]["Model" + str(self.Config["modelid"])] = self.resources
 
-    def saveAdditions(self):
+    def save_additions(self):
         pass
 
-    def launchCrossValidation(self):
+    def launch_crossvalidation(self):
         print ("Start cross-validation...")
         ds = datetime.datetime.now()
         dp = DataPreparation(self, self.addValSet)
@@ -237,7 +237,7 @@ class BaseModel:
             print ("Resulting F1-Measure: %f\n" % cycleF1)
             if cycleF1 > f1:
                 if self.Config["save_cross_validations_datasets"]:
-                    self.saveDataSets()
+                    self.save_data_sets()
                 f1 = cycleF1
         de = datetime.datetime.now()
         print ("Cross-validation is done in %s" % get_formatted_date(ds, de))
@@ -247,7 +247,7 @@ class BaseModel:
                % get_abs_path(self.Config, "cross_validations_datasets_path"))
 
 
-    def saveDataSets(self):
+    def save_data_sets(self):
         root = get_abs_path(self.Config, "cross_validations_datasets_path")
         shutil.rmtree(root)
         os.mkdir(root)

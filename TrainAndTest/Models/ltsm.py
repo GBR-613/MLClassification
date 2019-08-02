@@ -73,7 +73,7 @@ class LTSMModel(BaseModel):
     def test_model(self):
         self.testNNModel()
 
-    def saveAdditions(self):
+    def save_additions(self):
         self.resources["w2v"] = "True"
         if not "indexer" in self.Config["resources"]:
             self.Config["resources"]["indexer"] = get_abs_path(self.Config, "indexer_path")

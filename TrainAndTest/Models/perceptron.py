@@ -36,7 +36,7 @@ class PerceptronModel(BaseModel):
         #self.model = joblib.load(get_abs_path(self.Config, "created_model_path", opt="name"))
         self.testSKLModel()
 
-    def saveAdditions(self):
+    def save_additions(self):
         if not "vectorizer" in self.Config["resources"]:
             self.Config["resources"]["vectorizer"] = get_abs_path(self.Config, "vectorizer_path")
         self.resources["vectorizer"] = "True"

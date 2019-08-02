@@ -247,7 +247,7 @@ class BertModel(BaseModel):
         if self.Config["type_of_execution"] != "crossvalidation":
             self.prepare_resources_for_runtime("torch")
         self.get_metrics()
-        self.saveResults()
+        self.save_results()
 
     def prepare_resources_for_runtime(self, type):
         self.resources["id"] = str(self.Config["modelid"])
@@ -261,7 +261,7 @@ class BertModel(BaseModel):
         self.resources["rank_threshold"] = self.rank_threshold
         self.Config["resources"]["models"]["Model" + str(self.Config["modelid"])] = self.resources
 
-    def launchCrossValidation(self):
+    def launch_crossvalidation(self):
         print ("Start cross-validation...")
         ds = datetime.datetime.now()
         self.cvDocs = self.Config["train_docs"] + self.Config["test_docs"]
@@ -293,7 +293,7 @@ class BertModel(BaseModel):
             print ("Resulting F1-Measure: %f\n"%(cycleF1))
             if cycleF1 > f1:
                 if self.Config["save_cross_validations_datasets"]:
-                    self.saveDataSets()
+                    self.save_data_sets()
                 f1 = cycleF1
         de = datetime.datetime.now()
         print ("Cross-validation is done in %s" % get_formatted_date(ds, de))

@@ -76,5 +76,5 @@ class CNNModel(BaseModel):
     def test_model(self):
         self.testNNModel()
 
-    def saveAdditions(self):
+    def save_additions(self):
         self.resources["handleType"] = "charVectors"
