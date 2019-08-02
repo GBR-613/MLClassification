@@ -1,7 +1,7 @@
 import os
 
 
-def show_time(ds,de):
+def get_formatted_date(ds,de):
     result = ''
     seconds = (de-ds).total_seconds()
     if seconds < 1:
@@ -28,12 +28,12 @@ def correct_path(Config, path):
         return False
     if not Config[path]:
         return False
-    if not os.path.exists(get_absolute_path(Config, path)):
+    if not os.path.exists(get_abs_path(Config, path)):
         return False
     return True
 
-
-def get_absolute_path(Config, relPath, opt=""):
+''' get absolute path from Config property '''
+def get_abs_path(Config, relPath, opt=""):
     result = ""
     if relPath in Config:
         result =  Config["home"] + "/" + Config[relPath]

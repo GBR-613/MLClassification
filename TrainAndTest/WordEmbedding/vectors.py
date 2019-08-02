@@ -4,7 +4,7 @@ import datetime
 import gensim
 from gensim.models.word2vec import Word2Vec
 from gensim.models.callbacks import CallbackAny2Vec
-from Utils.utils import get_absolute_path, show_time, updateParams, test_path
+from Utils.utils import get_abs_path, get_formatted_date, updateParams, test_path
 
 
 class Embedding:
@@ -33,7 +33,7 @@ class Embedding:
         print("Start to create W2V model...")
         print("Get input data...")
         ds = datetime.datetime.now()
-        with open(get_absolute_path(self.Config, "data_corpus_path"), 'r', encoding='UTF-8') as f:
+        with open(get_abs_path(self.Config, "data_corpus_path"), 'r', encoding='UTF-8') as f:
             for line in f:
                 if len(line.strip()) == 0:
                     continue
@@ -42,7 +42,8 @@ class Embedding:
                 sentences.append(words)
         f.close()
         de = datetime.datetime.now()
-        print("Got %d lines from file %s in %s"% (count, get_absolute_path(self.Config, "data_corpus_path"), show_time(ds, de)))
+        print("Got %d lines from file %s in %s"
+              % (count, get_abs_path(self.Config, "data_corpus_path"), get_formatted_date(ds, de)))
         numpy.random.shuffle(sentences)
 
         logger = EpochLogger(self.epochs)
@@ -51,14 +52,14 @@ class Embedding:
         print("Build vocabulary...")
         w2v.build_vocab(sentences)
         de = datetime.datetime.now()
-        print("Vocabulary is built in %s" % (show_time(ds, de)))
+        print("Vocabulary is built in %s" % (get_formatted_date(ds, de)))
         print("Train model...")
         ds = datetime.datetime.now()
         w2v.train(sentences, epochs=int(self.Config["epochs_total"]), total_examples=len(sentences), callbacks=[logger])
         de = datetime.datetime.now()
-        print("W2V model is completed in %s" % (show_time(ds, de)))
+        print("W2V model is completed in %s" % (get_formatted_date(ds, de)))
 
-        created_model_path = get_absolute_path(self.Config, "model_path")
+        created_model_path = get_abs_path(self.Config, "model_path")
         if self.Config["include_current_time_in_model_name"]:
             modelName = os.path.basename(created_model_path)
             dt = "-" + datetime.datetime.now().strftime("%Y-%b-%d-%H%M%S")
@@ -71,7 +72,7 @@ class Embedding:
         ds = datetime.datetime.now()
         w2v.wv.save_word2vec_format(finalPath, binary=False)
         de = datetime.datetime.now()
-        print("W2V model %s is saved in the text format in %s\n" % (finalPath, show_time(ds, de)))
+        print("W2V model %s is saved in the text format in %s\n" % (finalPath, get_formatted_date(ds, de)))
 
 class EpochLogger(CallbackAny2Vec):
     def __init__(self, epochs):

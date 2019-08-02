@@ -3,14 +3,14 @@ import subprocess
 import datetime
 from subprocess import Popen, PIPE
 from nltk.corpus import stopwords
-from Utils.utils import show_time
-from Utils.utils import get_absolute_path, test_path
+from Utils.utils import get_formatted_date, get_abs_path, test_path
+
 
 class TokensFromTagger:
     def __init__(self, Config):
         test_path(Config, "set_of_docs_lang_tokenization_lib_path",
                   "Wrong path to the tagger's jar. Tokenization can't be done")
-        tagger_path = get_absolute_path(Config, "set_of_docs_lang_tokenization_lib_path")
+        tagger_path = get_abs_path(Config, "set_of_docs_lang_tokenization_lib_path")
         inPath = Config["home"] + "/" + Config["source_path"]
         outPath = Config["home"] + "/" + Config["target_path"]
         stop_words = ",".join(list(stopwords.words('arabic'))) if Config["stop_words"] == "True" else ""
@@ -24,4 +24,4 @@ class TokensFromTagger:
         reply = srv.communicate()
         de = datetime.datetime.now()
         print(reply[0].decode())
-        print("All process is done in %s" % (show_time(ds, de)))
+        print("All process is done in %s" % (get_formatted_date(ds, de)))

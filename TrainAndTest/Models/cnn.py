@@ -9,7 +9,7 @@ from keras.models import load_model
 from keras.callbacks import ModelCheckpoint
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
-from Utils.utils import arabic_charset, get_absolute_path, show_time
+from Utils.utils import arabic_charset, get_abs_path, get_formatted_date
 
 from keras import backend as K
 import tensorflow as tf
@@ -30,14 +30,14 @@ class CNNModel(BaseModel):
         self.useProbabilities = True
         if Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
-        self.launchProcess()
+        self.launch_process()
 
     def prepareData(self):
         print("Start data preparation...")
         dp = DataPreparation(self, self.addValSet)
         dp.getCharVectors()
 
-    def createModel(self):
+    def create_model(self):
         embeddingSize = 128
         maxSeqLength = self.Config["max_chars_seq_len"]
         convLayersData = [[256, 10], [256, 7], [256, 5], [256, 3]]
@@ -62,10 +62,10 @@ class CNNModel(BaseModel):
         model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
         return model
 
-    def loadModel(self):
+    def load_model(self):
         self.model = self.loadNNModel()
 
-    def trainModel(self):
+    def train_model(self):
         """
         cf = tf.ConfigProto(inter_op_parallelism_threads=5)
         session = tf.Session(config=cf)
@@ -73,7 +73,7 @@ class CNNModel(BaseModel):
         """
         self.trainNNModel()
 
-    def testModel(self):
+    def test_model(self):
         self.testNNModel()
 
     def saveAdditions(self):

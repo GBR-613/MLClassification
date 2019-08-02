@@ -10,13 +10,13 @@ from keras.callbacks import ModelCheckpoint
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Models.metrics import ModelMetrics
-from Utils.utils import get_absolute_path, show_time, test_path, correct_path
+from Utils.utils import get_abs_path, get_formatted_date, test_path, correct_path
 
 
 class LTSMModel(BaseModel):
     def __init__(self, Config):
         super().__init__(Config)
-        if not self.isCorrectPath(Config):
+        if not self.is_correct_path(Config):
             raise Exception
         try:
             self.validation_data_size = float(Config["validation_data_size"])
@@ -36,9 +36,9 @@ class LTSMModel(BaseModel):
         self.load_w2v_model()
         if Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
-        self.launchProcess()
+        self.launch_process()
 
-    def isCorrectPath(self, Config):
+    def is_correct_path(self, Config):
         if self.Config["w2vmodel"] == None:
             test_path(Config, "model_path", "Wrong path to W2V model. Stop.")
         if not correct_path(Config, "indexer_path"):
@@ -52,7 +52,7 @@ class LTSMModel(BaseModel):
         dp = DataPreparation(self, self.addValSet)
         self.embMatrix, self.maxWords = dp.getWordVectorsMatrix()
 
-    def createModel(self):
+    def create_model(self):
         model = Sequential()
         model.add(Embedding(self.maxWords, self.ndim, input_length=self.Config["max_seq_len"]))
         model.layers[0].set_weights([self.embMatrix])
@@ -64,18 +64,18 @@ class LTSMModel(BaseModel):
         model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
         return model
 
-    def loadModel(self):
+    def load_model(self):
         self.model = self.loadNNModel()
 
-    def trainModel(self):
+    def train_model(self):
         self.trainNNModel()
 
-    def testModel(self):
+    def test_model(self):
         self.testNNModel()
 
     def saveAdditions(self):
         self.resources["w2v"] = "True"
         if not "indexer" in self.Config["resources"]:
-            self.Config["resources"]["indexer"] = get_absolute_path(self.Config, "indexer_path")
+            self.Config["resources"]["indexer"] = get_abs_path(self.Config, "indexer_path")
         self.resources["indexer"] = "True"
         self.resources["handleType"] = "wordVectorsMatrix"

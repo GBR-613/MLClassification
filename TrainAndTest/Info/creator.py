@@ -4,7 +4,7 @@ import json
 import collections
 import webbrowser
 from datetime import date, timedelta
-from Utils.utils import get_absolute_path
+from Utils.utils import get_abs_path
 
 
 class InfoCreator:
@@ -19,7 +19,7 @@ class InfoCreator:
             prevDays = int(arr[0])
             startDay = date.today() - timedelta(days=prevDays)
             self.startId = "%d%0.2d%0.2d000000" % (startDay.year, startDay.month, startDay.day)
-        self.path = get_absolute_path(Config, "reports_path")
+        self.path = get_abs_path(Config, "reports_path")
         os.chdir(self.path)
         for f in glob.glob("*"):
             resPath = self.path + "/" + f

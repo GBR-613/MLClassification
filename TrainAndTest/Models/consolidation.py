@@ -5,7 +5,7 @@ import pickle
 import json
 import datetime
 from Models.metrics import ModelMetrics, printMetrics
-from Utils.utils import get_absolute_path, show_time
+from Utils.utils import get_abs_path, get_formatted_date
 from Models.reports import Report
 
 class Collector:
@@ -34,13 +34,13 @@ class Collector:
         if not self.Config["results"]:
             raise ValueError("No results to consolidate them, Consolidation can not be performed.")
         if Config["save_reports"] == "True":
-            if not Config["reports_path"] or not os.path.isdir(get_absolute_path(Config, "reports_path")):
+            if not Config["reports_path"] or not os.path.isdir(get_abs_path(Config, "reports_path")):
                 print("Wrong path to the folder, containing reports. Reports can not be created.")
             else:
                 self.save_reports = True
         if Config["prepare_resources_for_runtime"] == "True":
             if (not Config["saved_resources_path"] or
-                    not os.path.isdir(get_absolute_path(Config, "saved_resources_path"))):
+                    not os.path.isdir(get_abs_path(Config, "saved_resources_path"))):
                 print("Wrong path to the folder, containing resources for runtime. Resources can not be saved.")
             else:
                 self.runtime = True
@@ -51,11 +51,11 @@ class Collector:
             if self.save_reports:
                 self.saveReports()
         if self.runtime:
-            if len(os.listdir(get_absolute_path(self.Config, "saved_resources_path"))) > 0:
-                print("Warning: folder %s is not empty. All its content will be deleted."%(
-                                get_absolute_path(self.Config, "saved_resources_path")))
-                shutil.rmtree(get_absolute_path(self.Config, "saved_resources_path"))
-                os.makedirs(get_absolute_path(self.Config, "saved_resources_path"), exist_ok=True)
+            saved_rc_path = get_abs_path(self.Config, "saved_resources_path")
+            if len(os.listdir(saved_rc_path)) > 0:
+                print("Warning: folder %s is not empty. All its content will be deleted." % saved_rc_path)
+                shutil.rmtree(saved_rc_path)
+                os.makedirs(saved_rc_path, exist_ok=True)
             print("\nCollect arfifacts for runtime...")
             self.prepare_resources_for_runtime()
 
@@ -125,7 +125,7 @@ class Collector:
                         labs.append(cNames[j])
                 report.docs[self.Config["test_docs"][i].name]["consolidated"] = ",".join(labs)
             report.models["consolidated"] = self.rank_threshold
-        rPath = get_absolute_path(self.Config, "reports_path") + "/" + self.Config["reqid"] + ".json"
+        rPath = get_abs_path(self.Config, "reports_path") + "/" + self.Config["reqid"] + ".json"
         with open(rPath, 'w', encoding="utf-8") as file:
             json.dump(report.toJSON(), file, indent=4)
         file.close()
@@ -135,13 +135,13 @@ class Collector:
                         "extra_words", "max_seq_len", "max_chars_seq_len", "single_doc_lang_tokenization_lib_path"]
         self.Config["resources"]["tokenization"] = {}
         ds = datetime.datetime.now()
-        self.outDir = get_absolute_path(self.Config, "saved_resources_path") + "/"
+        self.outDir = get_abs_path(self.Config, "saved_resources_path") + "/"
         for t in tokenization_options:
             if t != "single_doc_lang_tokenization_lib_path":
                 self.Config["resources"]["tokenization"][t] = self.Config[t]
             elif self.Config["language_tokenization"] == "True":
                 self.Config["resources"]["tokenization"]["single_doc_lang_tokenization_lib_path"] = \
-                    self.copyFile(get_absolute_path(self.Config, "single_doc_lang_tokenization_lib_path"))
+                    self.copyFile(get_abs_path(self.Config, "single_doc_lang_tokenization_lib_path"))
         isW2VNeeded = False
         for key, val in self.Config["resources"]["models"].items():
             val["created_model_path"] = self.copyFile(val["created_model_path"])
@@ -187,7 +187,7 @@ class Collector:
         file.close()
         de = datetime.datetime.now()
         print("\nArtifacts are copied into the folder %s in %s"%(
-            get_absolute_path(self.Config, "saved_resources_path"), show_time(ds, de)))
+            get_abs_path(self.Config, "saved_resources_path"), get_formatted_date(ds, de)))
 
     def copyFile(self, inPath):
         dir, name = os.path.split(inPath)

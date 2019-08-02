@@ -8,7 +8,7 @@ from keras.models import load_model
 from Models.base import BaseModel
 from Models.dataPreparation import DataPreparation
 from Models.metrics import ModelMetrics
-from Utils.utils import get_absolute_path, show_time, test_path
+from Utils.utils import get_abs_path, get_formatted_date, test_path
 
 
 class SnnModel(BaseModel):
@@ -34,14 +34,14 @@ class SnnModel(BaseModel):
         self.load_w2v_model()
         if Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
-        self.launchProcess()
+        self.launch_process()
 
     def prepareData(self):
         print ("Start data preparation...")
         dp = DataPreparation(self, self.addValSet)
         dp.getWordVectorsSum()
 
-    def createModel(self):
+    def create_model(self):
         model = Sequential()
         model.add(Dense(256, activation='relu', input_dim=self.ndim))
         model.add(Dropout(0.2))
@@ -53,13 +53,13 @@ class SnnModel(BaseModel):
         model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
         return model
 
-    def loadModel(self):
+    def load_model(self):
         self.model = self.loadNNModel()
 
-    def trainModel(self):
+    def train_model(self):
         self.trainNNModel()
 
-    def testModel(self):
+    def test_model(self):
         self.testNNModel()
 
     def saveAdditions(self):

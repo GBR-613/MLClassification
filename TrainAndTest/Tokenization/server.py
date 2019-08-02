@@ -11,8 +11,7 @@ import signal
 from subprocess import Popen, PIPE
 from pathlib import Path
 from nltk.parse.corenlp import CoreNLPParser
-from Utils.utils import show_time
-from Utils.utils import get_absolute_path
+from Utils.utils import get_formatted_date, get_abs_path
 from Tokenization.utils import joinTokens
 
 
@@ -28,7 +27,7 @@ class TokensFromServer:
         self.stopServer()
 
     def startServer(self):
-        stanford_path = get_absolute_path(self.Config, "servsource") + "/"
+        stanford_path = get_abs_path(self.Config, "servsource") + "/"
         os.chdir(stanford_path)
         os.environ["CLASSPATH"] = "*"
 
@@ -63,7 +62,7 @@ class TokensFromServer:
         fds = datetime.datetime.now()
         self.tokenizeData(parser, inPath, outPath)
         fde = datetime.datetime.now()
-        print("Tokenization complited in %s" % (show_time(fds, fde)))
+        print("Tokenization complited in %s" % (get_formatted_date(fds, fde)))
 
 
     def tokenizeData(self, parser, inPath, outPath):
@@ -117,7 +116,7 @@ class TokensFromServer:
                 result += joinTokens(tArr, self.Config).strip()
                 outFile.write(result)
         de = datetime.datetime.now()
-        print("File %s (%d lines, %d tokens): in %s" % (outPath, q, qt, show_time(ds, de)))
+        print("File %s (%d lines, %d tokens): in %s" % (outPath, q, qt, get_formatted_date(ds, de)))
         f.close()
         outFile.close()
 

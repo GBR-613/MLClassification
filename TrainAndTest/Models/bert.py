@@ -14,7 +14,7 @@ from Models.bertClassifier import BertForMultiLabelSequenceClassification, \
      Args, DataProcessor, convert_examples_to_features, getLogger, accuracy
 from Data.data import compose_tsv
 from Models.metrics import printAveragedMetrics
-from Utils.utils import get_absolute_path, show_time, test_path
+from Utils.utils import get_abs_path, get_formatted_date, test_path
 
 
 class BertModel(BaseModel):
@@ -26,10 +26,10 @@ class BertModel(BaseModel):
         self.device = 'cpu'
         self.n_gpu = torch.cuda.device_count()
         self.model_to_save = None
-        if not self.isCorrectPath(Config):
+        if not self.is_correct_path(Config):
             raise Exception
-        self.args = Args(get_absolute_path(self.Config, "pretrained_bert_model_path"),
-                         get_absolute_path(self.Config, "resulting_bert_files_path")) # model: pytorch_ber.gz
+        self.args = Args(get_abs_path(self.Config, "pretrained_bert_model_path"),
+                         get_abs_path(self.Config, "resulting_bert_files_path")) # model: pytorch_ber.gz
         self.max_seq_length = min(self.maxBertSeqLength, self.Config["max_seq_len"])
         if self.Config["type_of_execution"] != "test":
             self.do_train = True
@@ -50,9 +50,9 @@ class BertModel(BaseModel):
         #self.train_batch_size = args.train_batch_size // args.gradient_accumulation_steps
         if self.Config["type_of_execution"] != "crossvalidation":
             self.prepareData()
-        self.launchProcess()
+        self.launch_process()
 
-    def isCorrectPath(self, Config):
+    def is_correct_path(self, Config):
         test_path(Config, "pretrained_bert_model_path", "Wrong path to archive with pre-trained BERT model. Stop.")
         test_path(Config, "resulting_bert_files_path", "Wrong path to folder with resulting BERT files. Stop.")
         return True
@@ -77,7 +77,7 @@ class BertModel(BaseModel):
         self.vocabPath = os.path.dirname(self.args.bert_model) + "/vocab.txt"
         self.tokenizer = BertTokenizer(self.vocabPath)
 
-    def createModel(self):
+    def create_model(self):
         self.train_examples = self.processor.get_train_examples(self.args.data_dir)
         self.num_train_optimization_steps = int(
             len(self.train_examples) / self.train_batch_size / self.gradient_accumulation_steps)\
@@ -88,7 +88,7 @@ class BertModel(BaseModel):
         model.to(self.device)
         return model
 
-    def trainModel(self):
+    def train_model(self):
         print("Start training..")
         ds = datetime.datetime.now()
         param_optimizer = [p for p in self.model.named_parameters()]
@@ -139,7 +139,7 @@ class BertModel(BaseModel):
                     optimizer.zero_grad()
                     global_step += 1
         de = datetime.datetime.now()
-        print("Model is trained in %s" %  (show_time(ds, de)))
+        print("Model is trained in %s" %  (get_formatted_date(ds, de)))
         if self.Config["type_of_execution"] == "crossvalidation":
             return
         print ("Model evaluation...")
@@ -185,16 +185,16 @@ class BertModel(BaseModel):
         print ("Model accuracy: %.2f"%(eval_accuracy))
         # Save a trained model
         self.model_to_save = self.model.module if hasattr(self.model, 'module') else self.model
-        output_model_file = get_absolute_path(self.Config, "resulting_bert_files_path", opt="name")
+        output_model_file = get_abs_path(self.Config, "resulting_bert_files_path", opt="name")
         torch.save(self.model_to_save.state_dict(), output_model_file)
         print ("Model is saved in %s"%(output_model_file))
 
-    def testModel(self):
+    def test_model(self):
         print ("Start testing...")
         print("Rank threshold: %.2f" % (self.rank_threshold))
         ds = datetime.datetime.now()
         if self.model_to_save == None:
-            output_model_file = get_absolute_path(self.Config, "resulting_bert_files_path", opt="name")
+            output_model_file = get_abs_path(self.Config, "resulting_bert_files_path", opt="name")
             model_state_dict = torch.load(output_model_file)
             model = BertForMultiLabelSequenceClassification.from_pretrained(self.args.bert_model,
                                             state_dict=model_state_dict, num_labels=self.num_labels)
@@ -243,7 +243,7 @@ class BertModel(BaseModel):
         self.predictions = res
         self.testLabels = allLabs
         de = datetime.datetime.now()
-        print("Test dataset containing %d documents predicted in %s\n" % (len(eval_examples), show_time(ds, de)))
+        print("Test dataset containing %d documents predicted in %s\n" % (len(eval_examples), get_formatted_date(ds, de)))
         if self.Config["type_of_execution"] != "crossvalidation":
             self.prepare_resources_for_runtime("torch")
         self.getMetrics()
@@ -251,7 +251,7 @@ class BertModel(BaseModel):
 
     def prepare_resources_for_runtime(self, type):
         self.resources["id"] = str(self.Config["modelid"])
-        self.resources["created_model_path"] = get_absolute_path(self.Config, "resulting_bert_files_path", opt="name")
+        self.resources["created_model_path"] = get_abs_path(self.Config, "resulting_bert_files_path", opt="name")
         self.resources["modelType"] = type
         if not "ptBertModel" in self.Config["resources"]:
             self.Config["resources"]["ptBertModel"] = self.args.bert_model
@@ -285,9 +285,9 @@ class BertModel(BaseModel):
                 self.Config["cross_validations_test_docs"] = self.cvDocs[ind:ind+pSize]
             ind += pSize
             self.prepareData()
-            self.model = self.createModel()
-            self.trainModel()
-            self.testModel()
+            self.model = self.create_model()
+            self.train_model()
+            self.test_model()
             arrMetrics.append(self.metrics)
             cycleF1 = self.metrics["all"]["f1"]
             print ("Resulting F1-Measure: %f\n"%(cycleF1))
@@ -296,8 +296,8 @@ class BertModel(BaseModel):
                     self.saveDataSets()
                 f1 = cycleF1
         de = datetime.datetime.now()
-        print ("Cross-validation is done in %s"%(show_time(ds, de)))
+        print ("Cross-validation is done in %s" % get_formatted_date(ds, de))
         printAveragedMetrics(arrMetrics, self.Config)
         print ("The best result is %f"%(f1))
-        print ("Corresponding data sets are saved in the folder %s" %
-                                    get_absolute_path(self.Config, "cross_validations_datasets_path"))
+        print ("Corresponding data sets are saved in the folder %s"
+               % get_abs_path(self.Config, "cross_validations_datasets_path"))

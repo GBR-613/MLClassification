@@ -12,7 +12,7 @@ from nltk.corpus import stopwords
 from collections import namedtuple
 from Data.plots import *
 from Preprocess.utils import ArabicNormalizer
-from Utils.utils import get_absolute_path, updateParams, show_time, test_path
+from Utils.utils import get_abs_path, updateParams, get_formatted_date, test_path
 import stanfordnlp
 
 LabeledDocument = namedtuple('LabeledDocument', 'lines words labels nlabs qLabs name')
@@ -48,7 +48,7 @@ class DataLoader:
                 if self.Config["use_java"] == "True":
                     test_path(self.Config, 'single_doc_lang_tokenization_lib_path',
                               "Wrong path to the tagger's jar. Preprocessing can't be done.")
-                    lib_path = get_absolute_path(Config, 'single_doc_lang_tokenization_lib_path')
+                    lib_path = get_abs_path(Config, 'single_doc_lang_tokenization_lib_path')
                     command_line = 'java -Xmx2g -jar ' + lib_path + ' "' + self.Config["exclude_positions"] + '"'
                     self.jar = subprocess.Popen(command_line, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                                 stderr=subprocess.PIPE, shell=True, encoding="utf-8")
@@ -61,13 +61,13 @@ class DataLoader:
             if self.Config["normalization"] == "True":
                 self.normalizer = ArabicNormalizer()
         if Config["load_w2v_model"] == "True":
-            if not Config["model_path"] or not os.path.isfile(get_absolute_path(Config, "model_path")):
+            if not Config["model_path"] or not os.path.isfile(get_abs_path(Config, "model_path")):
                 raise ValueError("Wrong path to W2V model. Stop.")
             try:
                 self.ndim = int(self.Config["vectors_dimension"])
             except ValueError:
                 raise ValueError("Wrong size of vectors' dimentions. Stop.")
-            self.Config["resources"]["w2v"]["created_model_path"] = get_absolute_path(Config, "model_path")
+            self.Config["resources"]["w2v"]["created_model_path"] = get_abs_path(Config, "model_path")
             self.Config["resources"]["w2v"]["ndim"] = self.ndim
             self.load_w2v_model()
         else:
@@ -83,10 +83,10 @@ class DataLoader:
         else:
             print ("Start loading data...")
         ds = datetime.datetime.now()
-        self.Config["predefined_categories"] = self.get_categories(get_absolute_path(self.Config, "train_data_path"))
-        train_docs = self.get_data_docs(get_absolute_path(self.Config, "train_data_path"))
+        self.Config["predefined_categories"] = self.get_categories(get_abs_path(self.Config, "train_data_path"))
+        train_docs = self.get_data_docs(get_abs_path(self.Config, "train_data_path"))
         if not self.splitTrain:
-            test_docs = self.get_data_docs(get_absolute_path(self.Config, "test_data_path"))
+            test_docs = self.get_data_docs(get_abs_path(self.Config, "test_data_path"))
         else:
             ind = int(len(train_docs) * (1 - self.sz))
             random.shuffle(train_docs)
@@ -102,7 +102,7 @@ class DataLoader:
                 and self.Config["use_java"] == "True":
             self.jar.stdin.write('!!! STOP !!!\n')
             self.jar.stdin.flush()
-        print ("Input data loaded in %s"%(show_time(ds, de)))
+        print ("Input data loaded in %s"%(get_formatted_date(ds, de)))
         print ("Training set contains %d documents."%(len(self.Config["train_docs"])))
         print ("Testing set contains %d documents."%(len(self.Config["test_docs"])))
         print ("Documents belong to %d categories."%(len(self.Config["predefined_categories"])))
@@ -275,10 +275,10 @@ class DataLoader:
     def load_w2v_model(self):
         print ("Load W2V model...")
         ds = datetime.datetime.now()
-        self.Config["w2vmodel"] = gensim.models.KeyedVectors.load_word2vec_format(
-            get_absolute_path(self.Config, "model_path"))
+        self.Config["w2vmodel"] = \
+            gensim.models.KeyedVectors.load_word2vec_format(get_abs_path(self.Config, "model_path"))
         de = datetime.datetime.now()
-        print("Load W2V model (%s) in %s" % (get_absolute_path(self.Config, "model_path"), show_time(ds, de)))
+        print("Load W2V model (%s) in %s" % (get_abs_path(self.Config, "model_path"), get_formatted_date(ds, de)))
 
     def preprocess(self, text):
         if self.Config["language_tokenization"] == "True":
@@ -309,13 +309,13 @@ def compose_tsv(model, type):
     for k, v in model.Config["predefined_categories"].items():
         cNames[v] = k
 #    if type == "train":
-#        pretrained_bert_model_path = get_absolute_path(model.Config, "resulting_bert_files_path", opt="/train.tsv")
+#        pretrained_bert_model_path = get_abs_path(model.Config, "resulting_bert_files_path", opt="/train.tsv")
 #        data = model.Config[model.keyTrain]
 #    else:
-#        pretrained_bert_model_path = get_absolute_path(model.Config, "resulting_bert_files_path", opt="/dev.tsv")
+#        pretrained_bert_model_path = get_abs_path(model.Config, "resulting_bert_files_path", opt="/dev.tsv")
 #        data = model.Config[model.keyTest]
 
-    pre_trained_bert_model_path = get_absolute_path(model.Config, "resulting_bert_files_path",
+    pre_trained_bert_model_path = get_abs_path(model.Config, "resulting_bert_files_path",
                                                     opt=("/train.tsv" if type == "train" else "/dev.tsv"))
     data = model.Config[model.keyTest]
     target = open(pre_trained_bert_model_path, "w", encoding="utf-8")

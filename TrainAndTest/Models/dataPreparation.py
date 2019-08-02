@@ -9,7 +9,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
-from Utils.utils import show_time, get_absolute_path, arabic_charset
+from Utils.utils import get_formatted_date, get_abs_path, arabic_charset
 
 
 class DataPreparation:
@@ -65,10 +65,10 @@ class DataPreparation:
                 self.model.trainLabels = self.model.trainLabels[:ind]
 
                 de = datetime.datetime.now()
-                print("Prepare train and validation data in %s" % (show_time(ds, de)))
+                print("Prepare train and validation data in %s" % (get_formatted_date(ds, de)))
             else:
                 de = datetime.datetime.now()
-                print("Prepare train data in %s" % (show_time(ds, de)))
+                print("Prepare train data in %s" % (get_formatted_date(ds, de)))
 
         self.tmpCount = 0
         ds = datetime.datetime.now()
@@ -80,7 +80,7 @@ class DataPreparation:
         if self.model.isCV:
             return
         de = datetime.datetime.now()
-        print("Prepare test data in %s" % (show_time(ds, de)))
+        print("Prepare test data in %s" % (get_formatted_date(ds, de)))
         print("Unique words in all documents: %d" % (len(self.sdict)))
         print("Words not found in the w2v vocabulary: %d" % (self.nfWords))
 
@@ -117,7 +117,7 @@ class DataPreparation:
                 trainTexts.append(t.lines)
             tokenizer.fit_on_texts(trainTexts)
             if not self.model.isCV:
-                with open(get_absolute_path(self.model.Config, "indexer_path"), 'wb') as handle:
+                with open(get_abs_path(self.model.Config, "indexer_path"), 'wb') as handle:
                     pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 handle.close()
                 if self.model.Config["max_doc_len"] > self.model.Config["max_seq_len"]:
@@ -135,7 +135,7 @@ class DataPreparation:
                 self.model.trainArrays = self.model.trainArrays[:ind]
                 self.model.trainLabels = self.model.trainLabels[:ind]
         if tokenizer == None:
-            with open(get_absolute_path(self.model.Config, "indexer_path"), 'rb') as handle:
+            with open(get_abs_path(self.model.Config, "indexer_path"), 'rb') as handle:
                 tokenizer = pickle.load(handle)
             handle.close()
         testTexts = []
@@ -165,7 +165,7 @@ class DataPreparation:
         de = datetime.datetime.now()
         print('Found %s unique tokens.' % len(tokenizer.word_index))
         print ('Tokens not found in W2V vocabulary: %d'%nf)
-        print("All data prepared and embedding matrix built in %s"%(show_time(ds, de)))
+        print("All data prepared and embedding matrix built in %s"%(get_formatted_date(ds, de)))
         return embedding_matrix, self.maxWords
 
     def getCharVectors(self):
@@ -196,7 +196,7 @@ class DataPreparation:
         if self.model.isCV:
             return
         de = datetime.datetime.now()
-        print("Prepare all data in %s" % (show_time(ds, de)))
+        print("Prepare all data in %s" % (get_formatted_date(ds, de)))
 
     def stringToIndexes(self, str):
         chDict = arabic_charset()
@@ -222,20 +222,20 @@ class DataPreparation:
             self.model.trainArrays = wev.transform([x.lines for x in self.model.Config[self.keyTrain]])
             self.model.trainLabels = mlb.fit_transform([x.nlabs for x in self.model.Config[self.keyTrain]])
             if not self.model.isCV:
-                with open(get_absolute_path(self.model.Config, "binarizer_path"), 'wb') as handle:
+                with open(get_abs_path(self.model.Config, "binarizer_path"), 'wb') as handle:
                     pickle.dump(mlb, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 handle.close()
-                with open(get_absolute_path(self.model.Config, "vectorizer_path"), 'wb') as handle:
+                with open(get_abs_path(self.model.Config, "vectorizer_path"), 'wb') as handle:
                     pickle.dump(wev, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 handle.close()
         if not mlb:
-            with open(get_absolute_path(self.model.Config, "binarizer_path"), 'rb') as handle:
+            with open(get_abs_path(self.model.Config, "binarizer_path"), 'rb') as handle:
                 mlb = pickle.load(handle)
             handle.close()
-            with open(get_absolute_path(self.model.Config, "vectorizer_path"), 'rb') as handle:
+            with open(get_abs_path(self.model.Config, "vectorizer_path"), 'rb') as handle:
                 wev = pickle.load(handle)
             handle.close()
         self.model.testArrays = wev.transform([x.lines for x in self.model.Config[self.keyTest]])
         self.model.testLabels = mlb.fit_transform([x.nlabs for x in self.model.Config[self.keyTest]])
         de = datetime.datetime.now()
-        print("Prepare all data in %s" % (show_time(ds, de)))
+        print("Prepare all data in %s" % (get_formatted_date(ds, de)))

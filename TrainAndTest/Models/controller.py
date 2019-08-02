@@ -1,5 +1,5 @@
 import os
-from Utils.utils import get_absolute_path, updateParams, correct_path, test_path
+from Utils.utils import get_abs_path, updateParams, correct_path, test_path
 from Models.snn import SnnModel
 from Models.ltsm import LTSMModel
 from Models.cnn import CNNModel
@@ -49,14 +49,16 @@ class ModelController:
             self.test_data_size = -1
         if not correct_path(Config, "train_data_path"):
             if Config["type_of_execution"] != "test" or not Config["test_data_path"]:
-                raise ValueError("Wrong path to the training set: folder %s doesn't exist."%(get_absolute_path(Config, "train_data_path")))
+                raise ValueError("Wrong path to the training set: folder %s doesn't exist."
+                                 % get_abs_path(Config, "train_data_path"))
         if not correct_path(Config, "test_data_path"):
             if not (len(Config["test_data_path"]) == 0 and self.test_data_size > 0 and self.test_data_size < 1):
-                raise ValueError("Wrong path to the testing set: folder %d doesn't exist."%(get_absolute_path(Config, "test_data_path")))
+                raise ValueError("Wrong path to the testing set: folder %d doesn't exist."
+                                 % get_abs_path(Config, "test_data_path"))
         test_path(Config, "created_model_path", "Wrong path to the models' folder.")
         if not Config["name"]:
             Config["name"] = Config["type"] + str(Config["modelid"])
-        mPath = get_absolute_path(Config, "created_model_path", opt="name")
+        mPath = get_abs_path(Config, "created_model_path", opt="name")
         if Config["type_of_execution"] == "test" and not os.path.isfile(mPath):
             raise ValueError("Wrong path to the tested model.")
         if Config["type_of_execution"] != "test":
@@ -74,12 +76,12 @@ class ModelController:
                 raise ValueError("Wrong value of 'verbose' flag for training.")
             if Config["save_intermediate_results"] == "True":
                 if not Config["intermediate_results_path"] or \
-                        not os.path.isdir(get_absolute_path(Config, "intermediate_results_path")):
+                        not os.path.isdir(get_abs_path(Config, "intermediate_results_path")):
                     raise ValueError("Wrong path to folder with intermediate results.")
         """
         if Config["type_of_execution"].lower() != "train":
             if Config["modelinfo"] == "True":
-                if not Config["infopath"] or not os.path.isdir(get_absolute_path(Config, "infopath")):
+                if not Config["infopath"] or not os.path.isdir(get_abs_path(Config, "infopath")):
                     raise ValueError("Wrong path to folder containing model info.")
         """
         if Config["type_of_execution"] != "train" and Config["customrank"] == "True":

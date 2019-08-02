@@ -3,8 +3,7 @@ import subprocess
 import datetime
 from subprocess import Popen, PIPE
 from nltk.corpus import stopwords
-from Utils.utils import show_time
-from Utils.utils import get_absolute_path, updateParams
+from Utils.utils import get_formatted_date, get_abs_path, updateParams
 
 
 class Preprocessor:
@@ -16,7 +15,7 @@ class Preprocessor:
         self.process(Config)
 
     def process(self, Config):
-        lib_path = get_absolute_path(Config, "set_of_docs_lang_tokenization_lib_path")
+        lib_path = get_abs_path(Config, "set_of_docs_lang_tokenization_lib_path")
         print("GRISHA use set_of_docs_lang_tokenization")
         if not lib_path or not os.path.exists(lib_path):
             raise ValueError("Wrong path to the tagger's jar. Tokenization can't be done")
@@ -36,4 +35,4 @@ class Preprocessor:
         reply = srv.communicate()
         de = datetime.datetime.now()
         print(reply[0].decode())
-        print("All process is done in %s" % (show_time(ds, de)))
+        print("All process is done in %s" % (get_formatted_date(ds, de)))

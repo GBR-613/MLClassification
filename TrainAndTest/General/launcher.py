@@ -7,7 +7,7 @@ from WordEmbedding.vectors import Embedding
 from Data.data import DataLoader
 from Models.controller import ModelController
 from Models.consolidation import Collector
-from Utils.utils import get_configuration, get_absolute_path, test_path
+from Utils.utils import get_configuration, get_abs_path, test_path
 from Info.creator import InfoCreator
 
 Config = {}

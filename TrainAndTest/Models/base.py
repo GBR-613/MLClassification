@@ -6,12 +6,9 @@ from keras.models import load_model
 from keras.callbacks import ModelCheckpoint
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
-from Utils.utils import get_absolute_path
-from Utils.utils import correct_path
-from Models.metrics import metricsNames, printMetrics, printAveragedMetrics
-from Models.metrics import ModelMetrics
+from Models.metrics import ModelMetrics, metricsNames, printMetrics, printAveragedMetrics
 from Models.dataPreparation import DataPreparation
-from Utils.utils import align_to_left, show_time
+from Utils.utils import align_to_left, get_formatted_date, get_abs_path, correct_path
 
 
 class BaseModel:
@@ -46,7 +43,7 @@ class BaseModel:
             self.rank_threshold = 0.5
         self.train_batch = int(Config["train_batch"])
 
-    def isCorrectPath(self, Config):
+    def is_correct_path(self, Config):
         if not correct_path(Config, "binarizer_path"):
             if Config["type_of_execution"] == "test" or Config["binarizer_path"]:
                 print("Wrong path to binarizer. Stop.")
@@ -57,29 +54,29 @@ class BaseModel:
                 return False
         return True
 
-    def launchProcess(self):
+    def launch_process(self):
         if self.Config["type_of_execution"] == "crossvalidation":
             self.isCV = True
             self.launchCrossValidation()
         elif self.Config["type_of_execution"] != "test":
-            self.model = self.createModel()
-            self.trainModel()
+            self.model = self.create_model()
+            self.train_model()
             if self.Config["type_of_execution"] != "train":
-                self.testModel()
+                self.test_model()
         else:
-            self.loadModel()
-            self.testModel()
+            self.load_model()
+            self.test_model()
 
-    def createModel(self):
+    def create_model(self):
         pass
 
-    def loadModel(self):
+    def load_model(self):
         pass
 
-    def trainModel(self):
+    def train_model(self):
         pass
 
-    def testModel(self):
+    def test_model(self):
         pass
 
     def load_w2v_model(self):
@@ -89,23 +86,23 @@ class BaseModel:
             return
         print ("Load W2V model... ")
         ds = datetime.datetime.now()
-        self.w2vModel = gensim.models.KeyedVectors.load_word2vec_format(get_absolute_path(self.Config, "model_path"))
+        self.w2vModel = gensim.models.KeyedVectors.load_word2vec_format(get_abs_path(self.Config, "model_path"))
         de = datetime.datetime.now()
-        print("Load W2V model (%s) in %s" % (get_absolute_path(self.Config, "model_path"), show_time(ds, de)))
-        self.Config["resources"]["w2v"]["created_model_path"] = get_absolute_path(self.Config, "model_path")
+        print("Load W2V model (%s) in %s" % (get_abs_path(self.Config, "model_path"), get_formatted_date(ds, de)))
+        self.Config["resources"]["w2v"]["created_model_path"] = get_abs_path(self.Config, "model_path")
         self.Config["resources"]["w2v"]["ndim"] = self.ndim
 
     def loadNNModel(self):
-        return load_model(get_absolute_path(self.Config, "created_model_path", opt="name"))
+        return load_model(get_abs_path(self.Config, "created_model_path", opt="name"))
 
     def loadSKLModel(self):
-        return joblib.load(get_absolute_path(self.Config, "created_model_path", opt="name"))
+        return joblib.load(get_abs_path(self.Config, "created_model_path", opt="name"))
 
     def trainNNModel(self):
         checkpoints = []
         if self.save_intermediate_results and not self.isCV:
-            checkpoint = ModelCheckpoint(get_absolute_path(self.Config, "intermediate_results_path") + "/tempModel.hdf5", monitor='val_acc',
-                                     verbose=self.verbose, save_best_only=True, mode='auto')
+            checkpoint = ModelCheckpoint(get_abs_path(self.Config, "intermediate_results_path") + "/tempModel.hdf5",
+                                         monitor='val_acc', verbose=self.verbose, save_best_only=True, mode='auto')
             checkpoints.append(checkpoint)
         print("Start training...              ")
         ds = datetime.datetime.now()
@@ -113,15 +110,15 @@ class BaseModel:
                 validation_data=(self.valArrays, self.valLabels),
                 batch_size=self.train_batch, verbose=self.verbose, callbacks=checkpoints, shuffle=False)
         de = datetime.datetime.now()
-        print("Model is trained in %s" %  (show_time(ds, de)))
+        print("Model is trained in %s" %  (get_formatted_date(ds, de)))
         if self.isCV:
             return
-        self.model.save(get_absolute_path(self.Config, "created_model_path", opt="name"))
+        self.model.save(get_abs_path(self.Config, "created_model_path", opt="name"))
         print ("Model evaluation...")
         scores1 = self.model.evaluate(self.testArrays, self.testLabels, verbose=self.verbose)
         print("Final model accuracy: %.2f%%" % (scores1[1] * 100))
         if self.save_intermediate_results:
-            model1 = load_model(get_absolute_path(self.Config, "intermediate_results_path") + "/tempModel.hdf5")
+            model1 = load_model(get_abs_path(self.Config, "intermediate_results_path") + "/tempModel.hdf5")
             scores2 = model1.evaluate(self.testArrays, self.testLabels, verbose=self.verbose)
             print("Last saved model accuracy: %.2f%%" % (scores2[1] * 100))
             if scores1[1] < scores2[1]:
@@ -129,32 +126,32 @@ class BaseModel:
             pref = "The best model "
         else:
             pref = "Model "
-        self.model.save(get_absolute_path(self.Config, "created_model_path", opt="name"))
-        print (pref + "is saved in %s"%(get_absolute_path(self.Config, "created_model_path", opt="name")))
+        self.model.save(get_abs_path(self.Config, "created_model_path", opt="name"))
+        print (pref + "is saved in %s" % get_abs_path(self.Config, "created_model_path", opt="name"))
 
     def trainSKLModel(self):
         de = datetime.datetime.now()
         print("Start training...")
         self.model.fit(self.trainArrays, self.trainLabels)
         ds = datetime.datetime.now()
-        print("Model is trained in %s" % (show_time(de, ds)))
+        print("Model is trained in %s" % (get_formatted_date(de, ds)))
         if self.isCV:
             return
-        joblib.dump(self.model, get_absolute_path(self.Config, "created_model_path", opt="name"))
-        print ("Model is saved in %s"%(get_absolute_path(self.Config, "created_model_path", opt="name")))
+        joblib.dump(self.model, get_abs_path(self.Config, "created_model_path", opt="name"))
+        print ("Model is saved in %s" % get_abs_path(self.Config, "created_model_path", opt="name"))
         print("Model evaluation...")
         prediction = self.model.predict(self.testArrays)
-        print('Final accuracy is %.2f'%(accuracy_score(self.testLabels, prediction)))
+        print('Final accuracy is %.2f' % accuracy_score(self.testLabels, prediction))
         de = datetime.datetime.now()
-        print("Evaluated in %s" % (show_time(ds, de)))
+        print("Evaluated in %s" % get_formatted_date(ds, de))
 
     def testNNModel(self):
         print ("Start testing...")
-        print("Rank threshold: %.2f" % (self.rank_threshold))
+        print("Rank threshold: %.2f" % self.rank_threshold)
         ds = datetime.datetime.now()
         self.predictions = self.model.predict(self.testArrays)
         de = datetime.datetime.now()
-        print("Test dataset containing %d documents predicted in %s\n" % (len(self.testArrays), show_time(ds, de)))
+        print("Test dataset containing %d documents predicted in %s\n" % (len(self.testArrays), get_formatted_date(ds, de)))
         if self.isCV:
             return
         self.prepare_resources_for_runtime("keras")
@@ -173,7 +170,8 @@ class BaseModel:
         else:
             self.predictions = self.model.predict(self.testArrays)
         de = datetime.datetime.now()
-        print("Test dataset containing %d documents predicted in %s" % (self.testArrays.shape[0], show_time(ds, de)))
+        print("Test dataset containing %d documents predicted in %s"
+              % (self.testArrays.shape[0], get_formatted_date(ds, de)))
         if self.isCV:
             return
         self.prepare_resources_for_runtime("skl")
@@ -195,7 +193,7 @@ class BaseModel:
             self.Config["ranks"][self.Config["name"]] = 1.0
 
     def prepare_resources_for_runtime(self, type):
-        self.resources["created_model_path"] = get_absolute_path(self.Config, "created_model_path", opt="name")
+        self.resources["created_model_path"] = get_abs_path(self.Config, "created_model_path", opt="name")
         self.resources["modelType"] = type
         if self.useProbabilities:
             self.resources["rank_threshold"] = self.rank_threshold
@@ -218,7 +216,7 @@ class BaseModel:
         f1 = 0
         arrMetrics =[]
         for i in range(self.cross_validations_total):
-            print ("Cross-validation, cycle %d from %d..."%((i+1), self.cross_validations_total))
+            print ("Cross-validation, cycle %d from %d..." % ((i+1), self.cross_validations_total))
             if i == 0:
                 self.Config["cross_validations_train_docs"] = self.cvDocs[pSize:]
                 self.Config["cross_validations_test_docs"] = self.cvDocs[:pSize]
@@ -230,27 +228,27 @@ class BaseModel:
                 self.Config["cross_validations_test_docs"] = self.cvDocs[ind:ind+pSize]
             ind += pSize
             dp.getVectors(self.handleType)
-            self.model = self.createModel()
-            self.trainModel()
-            self.testModel()
+            self.model = self.create_model()
+            self.train_model()
+            self.test_model()
             ModelMetrics(self)
             arrMetrics.append(self.metrics)
             cycleF1 = self.metrics["all"]["f1"]
-            print ("Resulting F1-Measure: %f\n"%(cycleF1))
+            print ("Resulting F1-Measure: %f\n" % cycleF1)
             if cycleF1 > f1:
                 if self.Config["save_cross_validations_datasets"]:
                     self.saveDataSets()
                 f1 = cycleF1
         de = datetime.datetime.now()
-        print ("Cross-validation is done in %s"%(show_time(ds, de)))
+        print ("Cross-validation is done in %s" % get_formatted_date(ds, de))
         printAveragedMetrics(arrMetrics, self.Config)
         print ("The best result is %f"%(f1))
-        print ("Corresponding data sets are saved in the folder %s"%(
-            get_absolute_path(self.Config, "cross_validations_datasets_path")))
+        print ("Corresponding data sets are saved in the folder %s"
+               % get_abs_path(self.Config, "cross_validations_datasets_path"))
 
 
     def saveDataSets(self):
-        root = get_absolute_path(self.Config, "cross_validations_datasets_path")
+        root = get_abs_path(self.Config, "cross_validations_datasets_path")
         shutil.rmtree(root)
         os.mkdir(root)
         train_data_path = root + "/train"
