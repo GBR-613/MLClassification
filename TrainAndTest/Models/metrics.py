@@ -40,20 +40,20 @@ class ModelMetrics:
         self.useProbabilities = model.useProbabilities
         self.rank_threshold = model.rank_threshold
         self.diffThreshold = 10
-        self.model.metrics = self.initDicts()
-        self.getMetrics()
+        #self.model.metrics = self.initDicts()
 
-    def initDicts(self):
-        metrics = dict()
-        metrics["all"] = dict()
+        self.model.metrics = dict()
+        self.model.metrics["all"] = dict()
         for key in self.cats.keys():
-            metrics[key] = dict()
-        for key, val in metrics.items():
+            self.model.metrics[key] = dict()
+        for key, val in self.model.metrics.items():
             for k in metricsNames.keys():
                 val[k] = 0
-        return metrics
 
-    def rankIndicator(self, labels, predictions, index):
+        self.get_metrics()
+
+
+    def rank_indicator(self, labels, predictions, index):
         actual = labels[index] == 1
         if self.useProbabilities:
             predicted = predictions[index] >= self.rank_threshold
@@ -74,7 +74,7 @@ class ModelMetrics:
             predicted = predictions[index] == 1
         return actual, predicted
 
-    def getMetrics(self):
+    def get_metrics(self):
         lenCats = len(self.cats)
         # General results
         self.model.metrics["all"]["d_docs"] = len(self.labels)
@@ -92,7 +92,7 @@ class ModelMetrics:
             trueLabs = 0
             falseLabs = 0
             for j in range(lenCats):
-                actual, predicted = self.rankIndicator(self.labels[i], self.predictions[i], j)
+                actual, predicted = self.rank_indicator(self.labels[i], self.predictions[i], j)
                 if actual:
                     self.model.metrics["all"]["d_actual"] += 1
                     self.model.metrics[self.cNames[j]]["d_actual"] += 1
@@ -185,7 +185,7 @@ class ModelMetrics:
             tn = 0
             labels = 0
             for j in range(len(self.labels)):
-                actual, predicted = self.rankIndicator(self.labels[j], self.predictions[j], i)
+                actual, predicted = self.rank_indicator(self.labels[j], self.predictions[j], i)
                 if actual:
                     labels += 1
                     if predicted:
@@ -223,7 +223,8 @@ class ModelMetrics:
         if mtp + mtn + mlabs > 0:
             self.model.metrics["all"]["microF1"] = 2 * mtp / (mtp + mtn + mlabs)
 
-def printMetrics(model):
+
+def print_metrics(model):
     if not model.metrics:
         print("Metrics isn't calculated yet...")
         return
@@ -235,16 +236,17 @@ def printMetrics(model):
             print(f"    {align_to_left(metricsNames[key], 35)}   {'%5d' % val}")
         else:
             print(f"    {align_to_left(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
-    sortedDict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
+    sorted_dict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
     print("\n  F1-Measure by category in descend order:")
-    for d in sortedDict:
+    for d in sorted_dict:
         if d[0] != "all":
             print(f"    {align_to_left(d[0], 35)}\u200e   {'%.2f%%' % (d[1]['f1'] * 100)}")
 
-def printAveragedMetrics(arrMetrics, Config):
+
+def print_averaged_metrics(attr_metrics, Config):
     print("Averaged metrics:")
     model = SimpleModel(Config)
-    for itMetrics in arrMetrics:
+    for itMetrics in attr_metrics:
         for key1, val1 in itMetrics.items():
             for key2, val2 in val1.items():
                 if not key2.startswith("d"):
@@ -252,17 +254,18 @@ def printAveragedMetrics(arrMetrics, Config):
     for key1, val1 in model.metrics.items():
         for key2, val2 in val1.items():
             if not key2.startswith("d"):
-                model.metrics[key1][key2] /= len(arrMetrics)
+                model.metrics[key1][key2] /= len(attr_metrics)
     print("  General:")
     dt = model.metrics["all"]
     for key, val in dt.items():
         if not (key.startswith("d_") or key.startswith("dd_")):
             print(f"    {align_to_left(metricsNames[key], 35)}   {'%3.2f%%' % (val * 100)}")
-    sortedDict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
+    sorted_dict = sorted(model.metrics.items(), key=lambda x: x[1]["f1"], reverse=True)
     print("\n  Averaged F1-Measure by category in descend order:")
-    for d in sortedDict:
+    for d in sorted_dict:
         if d[0] != "all":
             print(f"    {align_to_left(d[0], 35)}\u200e   {'%.2f%%' % (d[1]['f1'] * 100)}")
+
 
 class SimpleModel:
     def __init__(self, Config):

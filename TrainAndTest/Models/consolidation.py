@@ -4,7 +4,7 @@ import shutil
 import pickle
 import json
 import datetime
-from Models.metrics import ModelMetrics, printMetrics
+from Models.metrics import ModelMetrics, print_metrics
 from Utils.utils import get_abs_path, get_formatted_date
 from Models.reports import Report
 
@@ -47,7 +47,7 @@ class Collector:
         print("Rank threshold for consolidated results: %.2f" % (self.rank_threshold))
         if self.save_reports or self.Config["show_consolidated_results"] == "True":
             self.getConsolidatedResults()
-            self.getMetrics()
+            self.get_metrics()
             if self.save_reports:
                 self.saveReports()
         if self.runtime:
@@ -77,10 +77,10 @@ class Collector:
                 else:
                     p = 0
 
-    def getMetrics(self):
+    def get_metrics(self):
         ModelMetrics(self)
         if self.Config["show_consolidated_results"] == "True":
-            printMetrics(self)
+            print_metrics(self)
 
     def saveReports(self):
         print ("Save report...")

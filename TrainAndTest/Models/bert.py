@@ -13,7 +13,7 @@ from Models.base import BaseModel
 from Models.bertClassifier import BertForMultiLabelSequenceClassification, \
      Args, DataProcessor, convert_examples_to_features, getLogger, accuracy
 from Data.data import compose_tsv
-from Models.metrics import printAveragedMetrics
+from Models.metrics import print_averaged_metrics
 from Utils.utils import get_abs_path, get_formatted_date, test_path
 
 
@@ -246,7 +246,7 @@ class BertModel(BaseModel):
         print("Test dataset containing %d documents predicted in %s\n" % (len(eval_examples), get_formatted_date(ds, de)))
         if self.Config["type_of_execution"] != "crossvalidation":
             self.prepare_resources_for_runtime("torch")
-        self.getMetrics()
+        self.get_metrics()
         self.saveResults()
 
     def prepare_resources_for_runtime(self, type):
@@ -271,7 +271,7 @@ class BertModel(BaseModel):
         pSize = len(self.cvDocs) // self.cross_validations_total
         ind = 0
         f1 = 0
-        arrMetrics =[]
+        attr_metrics =[]
         for i in range(self.cross_validations_total):
             print ("Cross-validation, cycle %d from %d..."%((i+1), self.cross_validations_total))
             if i == 0:
@@ -288,7 +288,7 @@ class BertModel(BaseModel):
             self.model = self.create_model()
             self.train_model()
             self.test_model()
-            arrMetrics.append(self.metrics)
+            attr_metrics.append(self.metrics)
             cycleF1 = self.metrics["all"]["f1"]
             print ("Resulting F1-Measure: %f\n"%(cycleF1))
             if cycleF1 > f1:
@@ -297,7 +297,7 @@ class BertModel(BaseModel):
                 f1 = cycleF1
         de = datetime.datetime.now()
         print ("Cross-validation is done in %s" % get_formatted_date(ds, de))
-        printAveragedMetrics(arrMetrics, self.Config)
+        print_averaged_metrics(attr_metrics, self.Config)
         print ("The best result is %f"%(f1))
         print ("Corresponding data sets are saved in the folder %s"
                % get_abs_path(self.Config, "cross_validations_datasets_path"))

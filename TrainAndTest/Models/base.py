@@ -6,7 +6,7 @@ from keras.models import load_model
 from keras.callbacks import ModelCheckpoint
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
-from Models.metrics import ModelMetrics, metricsNames, printMetrics, printAveragedMetrics
+from Models.metrics import ModelMetrics, metricsNames, print_metrics, print_averaged_metrics
 from Models.dataPreparation import DataPreparation
 from Utils.utils import align_to_left, get_formatted_date, get_abs_path, correct_path
 
@@ -155,7 +155,7 @@ class BaseModel:
         if self.isCV:
             return
         self.prepare_resources_for_runtime("keras")
-        self.getMetrics()
+        self.get_metrics()
         self.saveResults()
 
     def testSKLModel(self):
@@ -175,14 +175,14 @@ class BaseModel:
         if self.isCV:
             return
         self.prepare_resources_for_runtime("skl")
-        self.getMetrics()
+        self.get_metrics()
         self.saveResults()
 
-    def getMetrics(self):
+    def get_metrics(self):
         print ("Calculate metrics...")
         ModelMetrics(self)
         if self.Config["show_test_results"] == "True":
-            printMetrics(self)
+            print_metrics(self)
 
     def saveResults(self):
         self.Config["results"][self.Config["name"]] = self.predictions
@@ -214,7 +214,7 @@ class BaseModel:
         pSize = len(self.cvDocs) // self.cross_validations_total
         ind = 0
         f1 = 0
-        arrMetrics =[]
+        attr_metrics =[]
         for i in range(self.cross_validations_total):
             print ("Cross-validation, cycle %d from %d..." % ((i+1), self.cross_validations_total))
             if i == 0:
@@ -232,7 +232,7 @@ class BaseModel:
             self.train_model()
             self.test_model()
             ModelMetrics(self)
-            arrMetrics.append(self.metrics)
+            attr_metrics.append(self.metrics)
             cycleF1 = self.metrics["all"]["f1"]
             print ("Resulting F1-Measure: %f\n" % cycleF1)
             if cycleF1 > f1:
@@ -241,7 +241,7 @@ class BaseModel:
                 f1 = cycleF1
         de = datetime.datetime.now()
         print ("Cross-validation is done in %s" % get_formatted_date(ds, de))
-        printAveragedMetrics(arrMetrics, self.Config)
+        print_averaged_metrics(attr_metrics, self.Config)
         print ("The best result is %f"%(f1))
         print ("Corresponding data sets are saved in the folder %s"
                % get_abs_path(self.Config, "cross_validations_datasets_path"))
