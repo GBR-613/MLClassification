@@ -19,7 +19,12 @@ LabeledDocument = namedtuple('LabeledDocument', 'lines words labels nlabs qLabs 
 stop_words = set(stopwords.words('arabic'))
 
 
-class DataLoader:
+def DataLoader(Config, DefConfig, kwargs):
+    worker = _DataLoader(Config, DefConfig, kwargs)
+    worker.run()
+
+
+class _DataLoader:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Loading data ===")
         updateParams(Config, DefConfig, kwargs)
@@ -30,25 +35,27 @@ class DataLoader:
         self.splitTrain = False
         self.topBound = 0.9
         self.charsTopBound = 0.6
+        self.run()
 
-        test_path(Config, "train_data_path", "Wrong path to training set. Data can't be loaded.")
-        if Config["test_data_path"]:
-            test_path(Config, "test_data_path", "Wrong path to testing set. Data can't be loaded.")
+    def run(self):
+        test_path(self.Config, "train_data_path", "Wrong path to training set. Data can't be loaded.")
+        if self.Config["test_data_path"]:
+            test_path(self.Config, "test_data_path", "Wrong path to testing set. Data can't be loaded.")
         else:
             self.splitTrain = True
             try:
-                self.sz = float(Config["test_data_size"])
+                self.sz = float(self.Config["test_data_size"])
             except ValueError:
                 self.sz = 0
-            if not Config["test_data_path"] and (self.sz <= 0 or self.sz >= 1):
+            if not self.Config["test_data_path"] and (self.sz <= 0 or self.sz >= 1):
                 raise ValueError("Wrong size of testing set. Data can't be loaded.")
-        if Config["enable_tokenization"] == "True":
-            if Config["language_tokenization"] == "True":
+        if self.Config["enable_tokenization"] == "True":
+            if self.Config["language_tokenization"] == "True":
                 print("GRISHA use single_doc_lang_tokenization")
                 if self.Config["use_java"] == "True":
                     test_path(self.Config, 'single_doc_lang_tokenization_lib_path',
                               "Wrong path to the tagger's jar. Preprocessing can't be done.")
-                    lib_path = get_abs_path(Config, 'single_doc_lang_tokenization_lib_path')
+                    lib_path = get_abs_path(self.Config, 'single_doc_lang_tokenization_lib_path')
                     command_line = 'java -Xmx2g -jar ' + lib_path + ' "' + self.Config["exclude_positions"] + '"'
                     self.jar = subprocess.Popen(command_line, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                                 stderr=subprocess.PIPE, shell=True, encoding="utf-8")
@@ -60,21 +67,21 @@ class DataLoader:
                 self.stop_words = set()
             if self.Config["normalization"] == "True":
                 self.normalizer = ArabicNormalizer()
-        if Config["load_w2v_model"] == "True":
-            if not Config["model_path"] or not os.path.isfile(get_abs_path(Config, "model_path")):
+        if self.Config["load_w2v_model"] == "True":
+            if not self.Config["model_path"] or not os.path.isfile(get_abs_path(self.Config, "model_path")):
                 raise ValueError("Wrong path to W2V model. Stop.")
             try:
                 self.ndim = int(self.Config["vectors_dimension"])
             except ValueError:
                 raise ValueError("Wrong size of vectors' dimentions. Stop.")
-            self.Config["resources"]["w2v"]["created_model_path"] = get_abs_path(Config, "model_path")
+            self.Config["resources"]["w2v"]["created_model_path"] = get_abs_path(self.Config, "model_path")
             self.Config["resources"]["w2v"]["ndim"] = self.ndim
             self.load_w2v_model()
         else:
             self.Config["w2vmodel"] = None
 
         self.load_data()
-        if Config["analysis"] == "True":
+        if self.Config["analysis"] == "True":
             self.analysis()
 
     def load_data(self):
@@ -264,7 +271,7 @@ class DataLoader:
                 results.append(label)
         return len(results), qLabs
 
-    def files_by_category(self, docs, cats):
+    def files_by_category(docs, cats):
         fInCats = [0] * len(cats)
         for doc in docs:
             for j in range(len(cats)):

@@ -7,7 +7,7 @@ from WordEmbedding.vectors import Embedding
 from Data.data import DataLoader
 from Models.controller import ModelController
 from Models.consolidation import Collector
-from Utils.utils import get_configuration, get_abs_path, test_path
+from Utils.utils import get_configuration, test_path
 from Info.creator import InfoCreator
 
 Config = {}
@@ -75,11 +75,8 @@ def work():
         func = actions_def[action[0]][0]
         kwargs = action[1]
         action_config_name = actions_def[action[0]][1]
-        if len(action_config_name) > 0:
-            action_config = get_configuration(parser, action_config_name)
-            func(Config, action_config, kwargs)
-        else:
-            func(Config)
+        action_config = get_configuration(parser, action_config_name)
+        func(Config, action_config, kwargs)
 
 
 def parse_config_info(path):
@@ -89,20 +86,20 @@ def parse_config_info(path):
             Config[opt[0]] = opt[1]
     if not Config["home"]:
         Config["home"] = str(Path.home())
-    if not Config["infofrom"]:
-        Config["infofrom"] = "today"
-    if Config["infofrom"] != "today":
-        chk = Config["infofrom"].split()
+    if not Config["info_from"]:
+        Config["info_from"] = "today"
+    if Config["info_from"] != "today":
+        chk = Config["info_from"].split()
         if len(chk) != 2 and not chk[1].startswith("day"):
-            print ("Wrong value of 'infofrom' option. Exit.")
+            print ("Wrong value of 'info_from' option. Exit.")
             return
         try:
             days = int(chk[0])
         except ValueError:
-            print ("Wrong value of 'infofrom' option. Exit.")
+            print ("Wrong value of 'info_from' option. Exit.")
             return
     test_path(Config, "reports_path", "Wrong path to the folder, containing reports. Exit.")
-    test_path(Config, "actualpath",
+    test_path(Config, "actual_path",
               "Warning: wrong path to the folder containing original documents. It will not be possible to view them.")
     InfoCreator(Config)
 

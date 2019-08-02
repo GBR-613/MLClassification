@@ -49,9 +49,10 @@ def get_abs_path(Config, relPath, opt=""):
 
 def get_configuration(parser, section):
     DefConfig = {}
-    for item in parser.items(section):
-        if item[1]:
-            DefConfig[item[0]] = item[1]
+    if section:
+        for item in parser.items(section):
+            if item[1]:
+                DefConfig[item[0]] = item[1]
     return DefConfig
 
 

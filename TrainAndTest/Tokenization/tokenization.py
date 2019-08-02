@@ -1,5 +1,5 @@
-from Tokenization.server import TokensFromServer
-from Tokenization.tagger import TokensFromTagger
+from Tokenization.server import tokens_from_server
+from Tokenization.tagger import tokens_from_tagger
 from Utils.utils import updateParams
 
 
@@ -16,8 +16,8 @@ class Tokenizer:
             Config["error"] = True
             return
         if Config["typetoks"] == "server":
-            TokensFromServer(Config)
+            tokens_from_server(Config)
         elif Config["typetoks"] == "tagger":
-            TokensFromTagger(Config)
+            tokens_from_tagger(Config)
         else:
             print ("Wrong tokenization type. Tokenization can't be done.")

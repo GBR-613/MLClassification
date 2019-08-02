@@ -8,8 +8,14 @@ from Models.metrics import ModelMetrics, print_metrics
 from Utils.utils import get_abs_path, get_formatted_date
 from Models.reports import Report
 
-class Collector:
-    def __init__(self, Config):
+
+def Collector(Config, DefConfig, kwargs):
+    worker = _Collector(Config, DefConfig, kwargs)
+    worker.run()
+
+
+class _Collector:
+    def __init__(self, Config, DefConfig, kwargs):
         self.Config = Config
         if "test_docs" not in Config or not Config["results"]:
             print ("Documents have not been classified in this process chain.")
@@ -30,17 +36,20 @@ class Collector:
         self.useProbabilities = False
         self.save_reports = False
         self.runtime = False
+
+    def run(self):
         print ("\nCalculate consolidated metrics...")
         if not self.Config["results"]:
-            raise ValueError("No results to consolidate them, Consolidation can not be performed.")
-        if Config["save_reports"] == "True":
-            if not Config["reports_path"] or not os.path.isdir(get_abs_path(Config, "reports_path")):
+            print("No results to consolidate them. Consolidation can not be performed.")
+            return
+        if self.Config["save_reports"] == "True":
+            if not self.Config["reports_path"] or not os.path.isdir(get_abs_path(self.Config, "reports_path")):
                 print("Wrong path to the folder, containing reports. Reports can not be created.")
             else:
                 self.save_reports = True
-        if Config["prepare_resources_for_runtime"] == "True":
-            if (not Config["saved_resources_path"] or
-                    not os.path.isdir(get_abs_path(Config, "saved_resources_path"))):
+        if self.Config["prepare_resources_for_runtime"] == "True":
+            if (not self.Config["saved_resources_path"] or
+                    not os.path.isdir(get_abs_path(self.Config, "saved_resources_path"))):
                 print("Wrong path to the folder, containing resources for runtime. Resources can not be saved.")
             else:
                 self.runtime = True
@@ -86,7 +95,7 @@ class Collector:
         print ("Save report...")
         report = Report()
         report.requestId = self.Config["reqid"]
-        report.sourcesPath = self.Config["actualpath"]
+        report.sourcesPath = self.Config["actual_path"]
         report.datasetPath = self.Config["test_data_path"]
 
         tokenization_options = ["language_tokenization", "normalization", "stop_words", "exclude_positions",

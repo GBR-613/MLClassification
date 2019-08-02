@@ -159,6 +159,6 @@ Results of user's requests, previously created and saved by the process _Collect
 
 `python info.py config.cfg`
 
-In general it is the same configuration file, which was used by the script `start`. Data needed for `info.py`, should be placed there as a value of the option _infofrom_ from the section _requests_. This option defines the period, in which requests were created, and may contain or word "today", or text in the form `X days`, here X is any number.    
+In general it is the same configuration file, which was used by the script `start`. Data needed for `info.py`, should be placed there as a value of the option _info_from_ from the section _requests_. This option defines the period, in which requests were created, and may contain or word "today", or text in the form `X days`, here X is any number.    
 
 Example of resulting HTML file (`curInfo.html`) can be found in the current folder.

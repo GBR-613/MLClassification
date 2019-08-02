@@ -7,7 +7,12 @@ from gensim.models.callbacks import CallbackAny2Vec
 from Utils.utils import get_abs_path, get_formatted_date, updateParams, test_path
 
 
-class Embedding:
+def Embedding(Config, DefConfig, kwargs):
+    worker = _Embedding(Config, DefConfig, kwargs)
+    worker.run()
+
+
+class _Embedding:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Word Embedding ===")
         updateParams(Config, DefConfig, kwargs)
@@ -25,9 +30,9 @@ class Embedding:
             self.ndim = int(self.Config["vectors_dimension"])
         except ValueError:
             raise ValueError("Wrong size of resulting vectors. W2V model can't be created.")
-        self.createW2VModel()
+        #self.createW2VModel()
 
-    def createW2VModel(self):
+    def run(self): #create W2V Model
         sentences = []
         count = 0
         print("Start to create W2V model...")

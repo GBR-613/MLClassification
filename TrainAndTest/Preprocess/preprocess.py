@@ -6,30 +6,35 @@ from nltk.corpus import stopwords
 from Utils.utils import get_formatted_date, get_abs_path, updateParams
 
 
-class Preprocessor:
+def Preprocessor(Config, DefConfig, kwargs):
+    worker = _Preprocessor(Config, DefConfig, kwargs)
+    worker.run()
+
+
+class _Preprocessor:
     def __init__(self, Config, DefConfig, kwargs):
         print("=== Preprocessing ===")
         updateParams(Config, DefConfig, kwargs)
         self.Config = Config
         self.DefConfig = DefConfig
-        self.process(Config)
+        #self.process(Config)
 
-    def process(self, Config):
-        lib_path = get_abs_path(Config, "set_of_docs_lang_tokenization_lib_path")
+    def run(self):
+        lib_path = get_abs_path(self.Config, "set_of_docs_lang_tokenization_lib_path")
         print("GRISHA use set_of_docs_lang_tokenization")
         if not lib_path or not os.path.exists(lib_path):
             raise ValueError("Wrong path to the tagger's jar. Tokenization can't be done")
-        in_path = Config["home"] + "/" + Config["source_path"]
-        if not Config["source_path"] or Config["source_path"] == Config["target_path"]:
+        in_path = self.Config["home"] + "/" + self.Config["source_path"]
+        if not self.Config["source_path"] or self.Config["source_path"] == self.Config["target_path"]:
             raise ValueError("Wrong source/target path(s). Tokenization can't be done.")
-        out_path = Config["home"] + "/" + Config["target_path"]
+        out_path = self.Config["home"] + "/" + self.Config["target_path"]
         stop_words = ""
-        stop_words = ",".join(list(stopwords.words('arabic'))) if Config["stop_words"] == "True" else ""
+        stop_words = ",".join(list(stopwords.words('arabic'))) if self.Config["stop_words"] == "True" else ""
         ds = datetime.datetime.now()
         srv = subprocess.Popen('java -Xmx2g -jar ' + lib_path + ' "' + in_path + '" "' +
-                               out_path + '" "' + Config["exclude_positions"] + '" "'+ stop_words + '" "' +
-                               Config["extra_words"] + '" "' + Config["normalization"] + '" "' +
-                               Config["language_tokenization"] + '"',
+                               out_path + '" "' + self.Config["exclude_positions"] + '" "'+ stop_words + '" "' +
+                               self.Config["extra_words"] + '" "' + self.Config["normalization"] + '" "' +
+                               self.Config["language_tokenization"] + '"',
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         srv.wait()
         reply = srv.communicate()

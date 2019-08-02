@@ -14,8 +14,8 @@ class InfoCreator:
         self.curDir = os.path.dirname(__file__)
         self.info = {}
         self.startId = "%d%0.2d%0.2d000000"%(date.today().year, date.today().month, date.today().day)
-        if self.Config["infofrom"] != "today":
-            arr = self.Config["infofrom"].split()
+        if self.Config["info_from"] != "today":
+            arr = self.Config["info_from"].split()
             prevDays = int(arr[0])
             startDay = date.today() - timedelta(days=prevDays)
             self.startId = "%d%0.2d%0.2d000000" % (startDay.year, startDay.month, startDay.day)
