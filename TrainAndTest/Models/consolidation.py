@@ -9,12 +9,12 @@ from Utils.utils import get_abs_path, get_formatted_date
 from Models.reports import Report
 
 
-def Collector(Config, DefConfig, kwargs):
-    worker = _Collector(Config, DefConfig, kwargs)
+def job_collector(Config, DefConfig, kwargs):
+    worker = Collector(Config, DefConfig, kwargs)
     worker.run()
 
 
-class _Collector:
+class Collector:
     def __init__(self, Config, DefConfig, kwargs):
         self.Config = Config
         if "test_docs" not in Config or not Config["results"]:

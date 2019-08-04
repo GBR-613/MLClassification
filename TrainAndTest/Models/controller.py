@@ -20,12 +20,12 @@ userInfo = {
     "none": "set parameters only"}
 
 
-def ModelController(Config, DefConfig, kwargs):
-    worker = _ModelController(Config, DefConfig, kwargs)
+def job_model_controller(Config, DefConfig, kwargs):
+    worker = ModelController(Config, DefConfig, kwargs)
     worker.run()
 
 
-class _ModelController:
+class ModelController:
     def __init__(self, Config, DefConfig, kwargs):
         self.Config = Config
         self.DefConfig = DefConfig

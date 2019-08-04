@@ -2,24 +2,24 @@ import os
 import datetime
 from pathlib import Path
 from configparser import ConfigParser
-from Preprocess.preprocess import Preprocessor
-from WordEmbedding.vectors import Embedding
-from Data.data import DataLoader
-from Models.controller import ModelController
-from Models.consolidation import Collector
+from Preprocess.preprocess import job_preprocessor
+from WordEmbedding.vectors import job_word_embedding
+from Data.data import job_data_loader
+from Models.controller import job_model_controller
+from Models.consolidation import job_collector
 from Utils.utils import get_configuration, test_path
 from Info.creator import InfoCreator
 
 Config = {}
 parser = ConfigParser()
-actions_list = []
+jobs_list = []
 
-actions_def = {
-    "P": (Preprocessor,"preprocess"),
-    "W": (Embedding,"word_embedding"),
-    "D": (DataLoader,"data"),
-    "M": (ModelController,"model"),
-    "C": (Collector,"")
+jobs_def = {
+    "P": (job_preprocessor,"preprocess"),
+    "W": (job_word_embedding,"word_embedding"),
+    "D": (job_data_loader,"data"),
+    "M": (job_model_controller,"model"),
+    "C": (job_collector,"")
 }
 
 
@@ -51,32 +51,31 @@ def parse_request(req):
     tasks = req.split("|")
     for task in tasks:
         task_name = task[0]
-        if task_name not in actions_def.keys():
+        if task_name not in jobs_def.keys():
             raise ValueError("Wrong task name, should be one of P,W,M,D,C: " + task_name)
         if not (task[1] == "(" and task[-1] == ")"):
             raise ValueError("Wrong definition of task name ('%s'). Exit." % task)
         definition = task[2:-1]
         kwargs = {}
         if definition != "":
-            options = definition.split(";")
-            for j in range(len(options)):
-                kvs = options[j].split("=")
+            for option in definition.split(";"):
+                kvs = option.split("=")
                 if kvs[0].lower() not in Config:
-                    raise ValueError("Wrong parameter ('%s') of task name '%s'. Stop." % kvs[0], task_name)
+                    raise ValueError("Wrong parameter ('%s') of task name '%s'. Stop." % (kvs[0], task_name))
                 for k in range(len(kvs)):
                     kwargs[kvs[0].lower()] = kvs[1]
-        actions_list.append((task_name, kwargs))
+        jobs_list.append((task_name, kwargs))
 
 
 def work():
-    for action in actions_list:
+    for job in jobs_list:
         print(datetime.datetime.now())
-        print(" Start task " + action[0])
-        func = actions_def[action[0]][0]
-        kwargs = action[1]
-        action_config_name = actions_def[action[0]][1]
-        action_config = get_configuration(parser, action_config_name)
-        func(Config, action_config, kwargs)
+        print(" Start task " + job[0])
+        func = jobs_def[job[0]][0]
+        kwargs = job[1]
+        job_config_name = jobs_def[job[0]][1]
+        job_config = get_configuration(parser, job_config_name)
+        func(Config, job_config, kwargs)
 
 
 def parse_config_info(path):

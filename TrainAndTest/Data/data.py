@@ -19,12 +19,12 @@ LabeledDocument = namedtuple('LabeledDocument', 'lines words labels nlabs qLabs 
 stop_words = set(stopwords.words('arabic'))
 
 
-def DataLoader(Config, DefConfig, kwargs):
-    worker = _DataLoader(Config, DefConfig, kwargs)
+def job_data_loader(Config, DefConfig, kwargs):
+    worker = DataLoader(Config, DefConfig, kwargs)
     worker.run()
 
 
-class _DataLoader:
+class DataLoader:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Loading data ===")
         updateParams(Config, DefConfig, kwargs)

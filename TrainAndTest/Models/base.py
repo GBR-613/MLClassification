@@ -9,9 +9,10 @@ from sklearn.metrics import accuracy_score
 from Models.metrics import ModelMetrics, metricsNames, print_metrics, print_averaged_metrics
 from Models.dataPreparation import DataPreparation
 from Utils.utils import align_to_left, get_formatted_date, get_abs_path, correct_path
+from abc import ABC, abstractmethod
 
 
-class BaseModel:
+class BaseModel(ABC):
     def __init__(self, Config):
         self.Config = Config
         self.trainArrays = []
@@ -67,15 +68,19 @@ class BaseModel:
             self.load_model()
             self.test_model()
 
+    @abstractmethod
     def create_model(self):
         pass
 
+    @abstractmethod
     def load_model(self):
         pass
 
+    @abstractmethod
     def train_model(self):
         pass
 
+    @abstractmethod
     def test_model(self):
         pass
 

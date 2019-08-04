@@ -7,12 +7,12 @@ from gensim.models.callbacks import CallbackAny2Vec
 from Utils.utils import get_abs_path, get_formatted_date, updateParams, test_path
 
 
-def Embedding(Config, DefConfig, kwargs):
-    worker = _Embedding(Config, DefConfig, kwargs)
+def job_word_embedding(Config, DefConfig, kwargs):
+    worker = Embedding(Config, DefConfig, kwargs)
     worker.run()
 
 
-class _Embedding:
+class Embedding:
     def __init__(self, Config, DefConfig, kwargs):
         print ("=== Word Embedding ===")
         updateParams(Config, DefConfig, kwargs)

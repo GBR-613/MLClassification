@@ -6,12 +6,12 @@ from nltk.corpus import stopwords
 from Utils.utils import get_formatted_date, get_abs_path, updateParams
 
 
-def Preprocessor(Config, DefConfig, kwargs):
-    worker = _Preprocessor(Config, DefConfig, kwargs)
+def job_preprocessor(Config, DefConfig, kwargs):
+    worker = Preprocessor(Config, DefConfig, kwargs)
     worker.run()
 
 
-class _Preprocessor:
+class Preprocessor:
     def __init__(self, Config, DefConfig, kwargs):
         print("=== Preprocessing ===")
         updateParams(Config, DefConfig, kwargs)
