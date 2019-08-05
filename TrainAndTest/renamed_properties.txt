@@ -1,0 +1,55 @@
+tempPath    intermediate_results_path
+
+modelPath   created_model_path
+
+indexerPath indexer_path
+
+binarizerPath   binarizer_path
+
+vectorizerPath  vectorizer_path
+
+bertPath    pretrained_bert_model_path
+
+bertOutPath resulting_bert_files_path
+
+runFor  type_of_execution
+
+kfold    cross_validations_number
+
+cvSave  save_cross_validations_datasets
+
+cvPath  ross_validations_datasets_path
+
+showMetrics show_test_results
+
+
+w2vCreate   need_create_model
+
+w2vCorpusPath   data_corpus_path
+
+w2vDim          dimension
+w2vEpochs       epochs_total
+w2vTimeInName   include_current_time_in_model_name
+w2vModelPath    model_path
+
+# Show consolidated results
+showResults       show_consolidated_results
+# Calculate and save reports
+reports = True  save_reports
+# Path to the folder containing reportsccccccccccccccc
+reportsPath = reports_path
+# Prepare resources for runtime
+saveResources = prepare_resources_for_runtime
+# Path to the folder containing saved resources
+resourcesPath = saved_resources_path
+
+
+cvtraindocs  cvtraindocs     cross_validations_train_docs 
+
+cvtestdocs      cross_validations_test_docs
+
+rankThreshold   rank_threshold
+actualPath      actual_path
+infoFrom    info_from
+
+
