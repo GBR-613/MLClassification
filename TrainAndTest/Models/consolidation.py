@@ -20,13 +20,13 @@ class Collector:
         if "test_docs" not in Config or not Config["results"]:
             print ("Documents have not been classified in this process chain.")
             print ("Consolidation can't be performed.")
-            self.rank_threshold = 0.5
-            if Config['consolidatedrank'] == "True":
-                try:
-                    self.rank_threshold = float(Config["consolidated_rank_threshold"])
-                except ValueError:
-                    self.rank_threshold = 0.5
             return
+        self.rank_threshold = 0.5
+        if Config['consolidatedrank'] == "True":
+            try:
+                self.rank_threshold = float(Config["consolidated_rank_threshold"])
+            except ValueError:
+                self.rank_threshold = 0.5
         self.testLabels = numpy.concatenate([numpy.array(x.labels).
                                 reshape(1,
                                         len(self.Config["predefined_categories"])) for x in self.Config["test_docs"]])
