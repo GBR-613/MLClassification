@@ -173,7 +173,7 @@ class BaseModel(ABC):
         if not self.useProbabilities:
             self.predictions = self.model.predict(self.testArrays)
         else:
-            self.predictions = self.model.predict(self.testArrays)
+            self.predictions = self.model.predict_proba(self.testArrays)
         de = datetime.datetime.now()
         print("Test dataset containing %d documents predicted in %s"
               % (self.testArrays.shape[0], get_formatted_date(ds, de)))
